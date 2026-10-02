@@ -1,0 +1,5 @@
+node_modules
+dist
+coverage
+examples/vite-demo/node_modules
+examples/vite-demo/dist

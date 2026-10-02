@@ -1,0 +1,52 @@
+.root {
+  width: 100%;
+  min-width: 0;
+}
+
+.pickerButton {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.25rem;
+  border-radius: 0.375rem;
+  color: var(--app-text-muted, #64748b);
+
+  &:hover {
+    background: var(--app-hover, #e8ecf1);
+  }
+}
+
+.popover {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 13rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.2);
+}
+
+.popoverLabel {
+  color: var(--app-text, #0f172a);
+  font-weight: 500;
+}
+
+.nativePicker {
+  width: 3rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0.375rem;
+  background: transparent;
+  cursor: pointer;
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: 1px solid var(--app-divider, #cbd5e1);
+    border-radius: 0.375rem;
+  }
+}

@@ -1,0 +1,26 @@
+.root {
+  width: 100%;
+  min-width: 0;
+  padding: 0.25rem 0.25rem 0;
+}
+
+.heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.label {
+  color: var(--app-text, #0f172a);
+  font-weight: 500;
+}
+
+.value {
+  color: var(--app-text-muted, #64748b);
+  white-space: nowrap;
+}
+
+.error {
+  color: #d32f2f;
+}

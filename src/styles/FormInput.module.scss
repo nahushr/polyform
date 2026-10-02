@@ -1,0 +1,1111 @@
+/**
+ * Form Input Components - Centralized Styles
+ * Shared styling for all form input components
+ */
+
+// Base filled input styles
+.autocomplete-input__listbox {
+  max-height: var(--autocomplete-max-height);
+  overflow-y: auto;
+}
+
+.filled-input {
+  :global {
+    .MuiFormControl-root {
+      margin: 0 !important;
+    }
+
+    .MuiFormControl-marginNormal,
+    .MuiFormControl-marginDense {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+    .MuiFilledInput-root {
+      background-color: var(--app-input, #f1f3f6) !important;
+      border-radius: 8px;
+      border: 1px solid var(--app-divider, #e2e8f0);
+      transition: all 0.2s ease-in-out;
+      display: flex;
+      align-items: center;
+      min-height: 48px;
+
+      &.MuiInputBase-adornedStart,
+      &.MuiInputBase-adornedEnd {
+        align-items: center;
+      }
+
+      // Multiline root — no top offset, let textarea's 22px handle vertical align like single-line
+      &.MuiInputBase-multiline {
+        padding: 0 8px 6px 0 !important;
+        align-items: flex-start;
+      }
+
+      &:hover {
+        background-color: var(--app-hover, #e8ecf1) !important;
+        border: 1px solid var(--app-divider, #cbd5e1);
+      }
+
+      &.Mui-focused {
+        background-color: var(--app-surface, #ffffff) !important;
+        border: 1px solid;
+        border-color: #1976d2;
+        box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+      }
+
+      &.Mui-error {
+        border: 1px solid;
+        border-color: #d32f2f;
+
+        &.Mui-focused {
+          box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.15);
+        }
+      }
+
+      &.Mui-disabled {
+        background-color: var(--app-surface-elevated, #f1f3f6) !important;
+        border-color: var(--app-divider, #e2e8f0);
+        opacity: 0.65;
+
+        .MuiFilledInput-input {
+          color: var(--app-text-muted, rgba(0, 0, 0, 0.6)) !important;
+          -webkit-text-fill-color: var(
+            --app-text-muted,
+            rgba(0, 0, 0, 0.6)
+          ) !important;
+        }
+      }
+    }
+
+    .MuiSelect-select {
+      &.MuiFilledInput-input {
+        color: var(--app-text, #0f172a);
+        padding-top: 14px;
+        padding-bottom: 2px;
+        line-height: 1.4;
+      }
+    }
+
+    .MuiFilledInput-input {
+      padding-top: 14px;
+      padding-bottom: 2px;
+      line-height: 1.4;
+      color: var(--app-text, #0f172a);
+      font-size: 14px !important;
+
+      // Multiline (textarea) — keep left tight (8px) but vertical aligned like Group Name
+      &.MuiInputBase-inputMultiline {
+        padding-left: 12px !important;
+        padding-right: 8px !important;
+        padding-top: 22px !important;
+        padding-bottom: 8px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+      }
+
+      &::placeholder {
+        line-height: 1.4;
+        color: var(--app-text-muted, rgba(0, 0, 0, 0.55)) !important;
+        opacity: 1 !important;
+      }
+
+      &::-webkit-input-placeholder {
+        color: var(--app-text-muted, rgba(0, 0, 0, 0.55)) !important;
+        opacity: 1 !important;
+      }
+
+      &::-moz-placeholder {
+        color: var(--app-text-muted, rgba(0, 0, 0, 0.55)) !important;
+        opacity: 1 !important;
+      }
+
+      &:-ms-input-placeholder {
+        color: var(--app-text-muted, rgba(0, 0, 0, 0.55)) !important;
+        opacity: 1 !important;
+      }
+    }
+
+    // Autocomplete — match TextField filled height (Package Type vs Package Name)
+    .MuiAutocomplete-inputRoot {
+      &.MuiFilledInput-root {
+        min-height: 48px !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+      }
+    }
+
+    .MuiAutocomplete-input,
+    .MuiAutocomplete-input.MuiFilledInput-input {
+      padding-top: 14px !important;
+      padding-bottom: 2px !important;
+      font-size: 14px !important;
+      line-height: 1.4 !important;
+    }
+
+    .MuiInputLabel-root {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #64748b;
+
+      &.Mui-focused {
+        color: #1976d2;
+      }
+    }
+
+    .MuiFormLabel-asterisk {
+      color: #d32f2f !important;
+      font-weight: 700;
+    }
+  }
+}
+
+// Select menu item styles
+.select-menu-item {
+  border-radius: 4px;
+  margin: 4px 8px;
+  color: #0f172a;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+
+  &.Mui-selected {
+    background-color: rgba(25, 118, 210, 0.08);
+
+    &:hover {
+      background-color: rgba(25, 118, 210, 0.12);
+    }
+  }
+}
+
+// Select placeholder styles use the active theme's muted text color.
+.select-placeholder {
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.55)) !important;
+  font-size: 14px;
+}
+
+.select-placeholder-item {
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.55)) !important;
+}
+
+.currency-input {
+  width: auto;
+}
+
+.currency-input-full-width {
+  width: 100%;
+}
+
+.currency-adornment {
+  margin-right: 0.5rem;
+}
+
+.currency-selector-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.currency-flag {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.currency-name {
+  color: var(--app-text, #0f172a);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.currency-dropdown-icon {
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.6));
+  transition: transform 0.2s;
+}
+
+.currency-dropdown-icon-open {
+  transform: rotate(180deg);
+}
+
+.currency-popover {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  max-height: 280px;
+  margin-top: 0.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.2);
+}
+
+.currency-search-panel {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--app-divider, #e2e8f0);
+}
+
+.currency-search-icon {
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.6));
+}
+
+.currency-options {
+  flex: 1;
+  min-height: 0;
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 0.125rem 0;
+}
+
+.currency-empty-state {
+  padding: 1rem;
+  text-align: center;
+}
+
+.currency-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+
+  &:hover,
+  &.currency-menu-item-selected {
+    background: rgba(25, 118, 210, 0.08);
+  }
+}
+
+.currency-option-content {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 0.75rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.currency-option-flag {
+  min-width: auto;
+  flex: 0 0 auto;
+  font-size: 1.25rem;
+}
+
+.currency-option-name {
+  color: var(--app-text, #0f172a);
+  font-weight: 400;
+}
+
+.currency-option-selected {
+  color: var(--app-primary-dark, #1565c0);
+  font-weight: 600;
+}
+
+.currency-option-meta {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.6));
+  font-weight: 600;
+}
+
+.phone-input {
+  width: auto;
+}
+
+.phone-input-full-width {
+  width: 100%;
+}
+
+.phone-adornment {
+  margin-right: 0.5rem;
+}
+
+.phone-country-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+.phone-country-flag {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.phone-country-code {
+  color: var(--app-text, #0f172a);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.phone-dropdown-icon {
+  margin-left: -0.125rem;
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.6));
+  transition: transform 0.2s;
+}
+
+.phone-dropdown-icon-open {
+  transform: rotate(180deg);
+}
+
+.phone-popover {
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  max-height: 280px;
+  margin-top: 0.25rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.2);
+}
+
+.phone-search-panel {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--app-divider, #e2e8f0);
+}
+
+.phone-search-icon {
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.6));
+}
+
+.phone-country-list {
+  flex: 0 1 auto;
+  max-height: 190px;
+  overflow-y: auto;
+  padding: 0.125rem 0;
+}
+
+.phone-empty-state {
+  padding: 1rem;
+  text-align: center;
+}
+
+.phone-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+
+  &:hover,
+  &.phone-menu-item-selected {
+    background: rgba(25, 118, 210, 0.08);
+  }
+}
+
+.phone-option-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  overflow: hidden;
+}
+
+.phone-option-flag {
+  min-width: auto;
+  font-size: 1.25rem;
+}
+
+.phone-option-name {
+  overflow: hidden;
+  color: var(--app-text, #0f172a);
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phone-option-meta {
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+  color: var(--app-text-muted, rgba(0, 0, 0, 0.6));
+  font-weight: 600;
+}
+
+.phone-option-selected {
+  color: var(--app-primary-dark, #1565c0);
+  font-weight: 600;
+}
+
+// ============================================================================
+// Image Upload Input Styles
+// ============================================================================
+
+.image-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+  padding: 16px 0;
+
+  &__header {
+    margin-bottom: 16px;
+    width: 100%;
+  }
+
+  &__label {
+    margin-bottom: 8px;
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__upload-button {
+    // Upload button styles
+  }
+
+  &__preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__avatar {
+    &--active {
+      cursor: pointer;
+      transition:
+        transform 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+    }
+
+    &--disabled {
+      cursor: default;
+      opacity: 0.7;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__attachment-container {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 8px;
+    position: relative;
+  }
+
+  &__attachment-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__attachment-avatar {
+    width: 100% !important;
+    height: 150px !important;
+    font-size: 0.875rem;
+  }
+
+  &__attachment-placeholder-icon {
+    font-size: 40px;
+    opacity: 0.5;
+  }
+
+  &__attachment-filename {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
+  }
+
+  &__empty {
+    border: 2px dashed rgba(0, 0, 0, 0.12);
+    border-radius: 4px;
+    padding: 32px;
+    text-align: center;
+  }
+
+  &__empty-icon {
+    font-size: 48px;
+    opacity: 0.3;
+    margin-bottom: 8px;
+  }
+
+  &__empty-text {
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
+
+.image-slots-upload__add-button {
+  text-transform: none;
+}
+
+// ============================================================================
+// File Drop Zone Styles
+// ============================================================================
+
+.file-drop-zone {
+  width: 100%;
+  min-height: 120px;
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  &__input {
+    display: none;
+  }
+
+  &:hover:not(&--disabled) {
+    border-color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.04);
+  }
+
+  &--drag-over {
+    border-color: #1976d2;
+    background-color: rgba(25, 118, 210, 0.08);
+    transform: scale(1.01);
+  }
+
+  &--has-file {
+    border-style: solid;
+    border-color: #4caf50;
+    background-color: rgba(76, 175, 80, 0.04);
+    cursor: default;
+
+    &:hover {
+      border-color: #4caf50;
+      background-color: rgba(76, 175, 80, 0.04);
+    }
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: #f5f5f5;
+
+    &:hover {
+      border-color: #e0e0e0;
+      background-color: #f5f5f5;
+    }
+  }
+
+  &__file-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+  }
+
+  &__file-icon {
+    font-size: 48px;
+    color: #1976d2;
+    flex-shrink: 0;
+  }
+
+  &__file-details {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__file-name {
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__file-size {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__upload-text {
+    font-weight: 500;
+  }
+
+  &__upload-hint {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  &__upload-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-align: center;
+  }
+
+  &__upload-icon {
+    font-size: 48px;
+    color: #bdbdbd;
+    transition: all 0.2s ease-in-out;
+
+    &--drag-over {
+      color: #1976d2;
+      transform: scale(1.1);
+    }
+  }
+}
+
+// Dark mode support for FileDropZone
+html[data-app-theme="dark"] {
+  .file-drop-zone {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.2);
+
+    &:hover:not(&--disabled) {
+      border-color: #90caf9;
+      background-color: rgba(144, 202, 249, 0.08);
+    }
+
+    &--drag-over {
+      border-color: #90caf9;
+      background-color: rgba(144, 202, 249, 0.12);
+    }
+
+    &--has-file {
+      border-color: #66bb6a;
+      background-color: rgba(102, 187, 106, 0.08);
+
+      &:hover {
+        border-color: #66bb6a;
+        background-color: rgba(102, 187, 106, 0.08);
+      }
+    }
+
+    &--disabled {
+      background-color: rgba(255, 255, 255, 0.02);
+
+      &:hover {
+        border-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(255, 255, 255, 0.02);
+      }
+    }
+
+    &__file-icon {
+      color: #90caf9;
+    }
+
+    &__upload-icon {
+      color: rgba(255, 255, 255, 0.5);
+
+      &--drag-over {
+        color: #90caf9;
+      }
+    }
+  }
+}
+
+// Rich Text Editor Styles (Tiptap)
+.rich-text-editor-wrapper {
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.rich-text-editor-label {
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-bottom: 4px;
+
+  &--error {
+    color: #d32f2f;
+  }
+}
+
+.rich-text-editor {
+  border: none;
+  border-radius: 0;
+  background-color: var(--app-surface, #fff);
+  color: var(--app-text, inherit);
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &--error {
+    border: none;
+  }
+
+  &--disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+}
+
+.rich-text-editor-toolbar {
+  border-bottom: 1px solid var(--app-divider, rgba(0, 0, 0, 0.12));
+  background-color: var(--app-input, rgba(0, 0, 0, 0.02));
+  gap: 4px;
+  flex-wrap: wrap;
+  min-height: 48px !important;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.rich-text-editor-divider {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.rich-text-editor-component {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  :global {
+    // Simplify toolbar - remove all padding and margins from nested containers
+    [class*="MuiCollapse-wrapper"],
+    [class*="MuiCollapse-wrapper"] > div,
+    [class*="MuiCollapse-wrapperInner"],
+    [class*="MenuBar"],
+    [class*="MenuBar"] > div,
+    [class*="MenuBar-content"],
+    [class*="MenuControlsContainer"] {
+      background-color: var(--app-input, #fafafa) !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 1px !important;
+      align-items: center !important;
+      min-height: auto !important;
+      box-shadow: none !important;
+    }
+
+    // Remove all borders and extra spacing from nested containers
+    [class*="RichTextField"] [class*="menuBar"],
+    [class*="MenuBar"] > *,
+    [class*="MuiCollapse-wrapper"] > *,
+    [class*="MuiCollapse-wrapperInner"] > * {
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    // Ensure MenuControlsContainer is left-aligned with minimal padding only between items
+    [class*="MenuControlsContainer"] {
+      padding: 2px 4px !important;
+      justify-content: flex-start !important;
+      text-align: left !important;
+    }
+
+    // Style toolbar buttons without breaking icons
+    [class*="MenuButton"] {
+      min-width: 24px !important;
+      min-height: 24px !important;
+      padding: 2px !important;
+      margin: 0 !important;
+      border-radius: 3px !important;
+
+      // Don't override icon styles, just ensure they're visible
+      svg,
+      .MuiSvgIcon-root {
+        display: inline-block !important;
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 16px !important;
+      }
+    }
+
+    // Style menu selects (dropdowns) - minimal styling to not break functionality
+    [class*="MenuSelect"] {
+      margin: 0 2px !important;
+      font-size: 12px !important;
+    }
+
+    // Style menu dividers - hide duplicate dividers
+    [class*="MenuDivider"] {
+      height: 20px !important;
+      margin: 0 2px !important;
+      flex-shrink: 0;
+
+      // Hide if there are multiple consecutive dividers
+      + [class*="MenuDivider"] {
+        display: none !important;
+      }
+    }
+
+    // Hide duplicate horizontal rules
+    hr[class*="MenuDivider"] + hr[class*="MenuDivider"],
+    [class*="MenuDivider"] + [class*="MenuDivider"] {
+      display: none !important;
+    }
+
+    // Target the RichTextContent wrapper (mui-tiptap structure)
+    [class*="RichTextContent"],
+    [class*="RichTextField"] {
+      display: flex;
+      flex-direction: column;
+      min-height: 200px;
+      max-height: 500px;
+      overflow: hidden;
+
+      // Target the content area wrapper
+      > div {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 0;
+
+        // Custom scrollbar styling for content wrapper
+        &::-webkit-scrollbar {
+          width: 10px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: #c1c1c1;
+          border-radius: 10px;
+          border: 2px solid #f1f1f1;
+          transition: background 0.2s ease;
+
+          &:hover {
+            background: #a8a8a8;
+          }
+        }
+
+        // Firefox scrollbar
+        scrollbar-width: thin;
+        scrollbar-color: #c1c1c1 #f1f1f1;
+      }
+    }
+
+    // Target the ProseMirror editor content
+    .ProseMirror {
+      outline: none;
+      min-height: 200px;
+      padding: 8px 12px;
+      box-sizing: border-box;
+
+      p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        float: left;
+        color: var(--app-text-muted, rgba(0, 0, 0, 0.38));
+        pointer-events: none;
+        height: 0;
+      }
+
+      // Header styles
+      h1 {
+        font-size: 2em;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-top: 0.67em;
+        margin-bottom: 0.67em;
+        color: var(--app-text, #1a1a1a);
+      }
+
+      h2 {
+        font-size: 1.5em;
+        font-weight: 600;
+        line-height: 1.3;
+        margin-top: 0.83em;
+        margin-bottom: 0.83em;
+        color: var(--app-text, #1a1a1a);
+      }
+
+      h3 {
+        font-size: 1.17em;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        color: var(--app-text, #1a1a1a);
+      }
+
+      h4 {
+        font-size: 1em;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-top: 1.33em;
+        margin-bottom: 1.33em;
+        color: var(--app-text, #1a1a1a);
+      }
+
+      h5 {
+        font-size: 0.83em;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-top: 1.67em;
+        margin-bottom: 1.67em;
+        color: var(--app-text, #1a1a1a);
+      }
+
+      h6 {
+        font-size: 0.67em;
+        font-weight: 600;
+        line-height: 1.4;
+        margin-top: 2.33em;
+        margin-bottom: 2.33em;
+        color: var(--app-text, #1a1a1a);
+      }
+
+      ul,
+      ol {
+        padding-left: 1.5em;
+      }
+
+      a {
+        color: #1976d2; // primary.main
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.rich-text-editor-content {
+  min-height: 200px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 16px;
+
+  :global {
+    .ProseMirror {
+      outline: none;
+      min-height: 200px;
+
+      p.is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        float: left;
+        color: var(--app-text-muted, rgba(0, 0, 0, 0.38));
+        pointer-events: none;
+        height: 0;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+      }
+
+      ul,
+      ol {
+        padding-left: 1.5em;
+      }
+
+      a {
+        color: #1976d2; // primary.main
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.rich-text-editor-helper-text {
+  margin-left: 14px;
+  margin-top: 4px;
+}
+
+// ==================== LazyAutocomplete Styles ====================
+
+.lazy-autocomplete {
+  &__container {
+    position: relative;
+  }
+
+  &__listbox {
+    overflow: auto;
+    max-height: var(--lazy-autocomplete-max-height, 300px);
+    padding: 0;
+    margin: 0;
+  }
+
+  &__listbox-short {
+    max-height: 200px;
+  }
+
+  &__listbox-medium {
+    max-height: 280px;
+  }
+
+  &__listbox-tall {
+    max-height: 360px;
+  }
+
+  &__listbox-extra-tall {
+    max-height: 480px;
+  }
+
+  &__hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 1rem;
+    border-top: 1px solid var(--app-divider, #e2e8f0);
+    background: var(--app-hover, #f8fafc);
+  }
+
+  &__loading-text {
+    color: rgba(0, 0, 0, 0.6);
+    margin-left: 8px;
+  }
+
+  &__hint-text {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 0.75rem;
+  }
+}
+
+// ==================== Radio Input Styles ====================
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  :global {
+    .MuiFormControlLabel-root {
+      margin-left: 0;
+      margin-right: 0;
+      margin-bottom: 4px;
+    }
+
+    .MuiRadio-root {
+      padding: 4px;
+    }
+  }
+}
+
+.radio-option {
+  :global {
+    .MuiFormControlLabel-label {
+      margin-left: 8px;
+    }
+  }
+}

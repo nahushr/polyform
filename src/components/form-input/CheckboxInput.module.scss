@@ -1,0 +1,15 @@
+.root {
+  min-width: 0;
+}
+
+.label {
+  margin-bottom: 0.25rem;
+  color: var(--app-text, #0f172a);
+  font-weight: 500;
+}
+
+.group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.75rem;
+}

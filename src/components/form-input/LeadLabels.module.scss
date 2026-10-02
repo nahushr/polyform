@@ -1,0 +1,153 @@
+.root {
+  min-width: 0;
+  width: 100%;
+}
+
+.autocomplete:global(.MuiAutocomplete-root) {
+  width: 100%;
+
+  :global(.MuiAutocomplete-inputRoot.MuiFilledInput-root) {
+    min-height: 68px !important;
+    height: auto;
+    align-items: flex-end !important;
+    flex-wrap: wrap;
+    padding-top: 22px !important;
+    padding-bottom: 5px !important;
+  }
+
+  :global(.MuiAutocomplete-tag) {
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+
+  :global(.MuiAutocomplete-input) {
+    min-width: 2rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+.labelChip {
+  max-width: 100%;
+  height: 24px;
+  font-weight: 600;
+
+  :global(.MuiChip-label) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.label-color-blue {
+  color: #17324d !important;
+  background-color: #84b6eb !important;
+}
+
+.label-color-green {
+  color: #24452a !important;
+  background-color: #bfe5bf !important;
+}
+
+.label-color-red {
+  color: #59272a !important;
+  background-color: #f6c6c7 !important;
+}
+
+.label-color-purple {
+  color: #382a57 !important;
+  background-color: #d4c5f9 !important;
+}
+
+.label-color-yellow {
+  color: #514213 !important;
+  background-color: #f9d77e !important;
+}
+
+.label-color-orange {
+  color: #55351f !important;
+  background-color: #f7c6a3 !important;
+}
+
+.label-color-teal {
+  color: #1e4944 !important;
+  background-color: #a7e3dc !important;
+}
+
+.label-color-gray {
+  color: #303943 !important;
+  background-color: #d0d7de !important;
+}
+
+.label-color-pink {
+  color: #542b3f !important;
+  background-color: #f7c1d9 !important;
+}
+
+.readonlyList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-height: 3.25rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.colorDot {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex: 0 0 0.75rem;
+  margin-top: 0.3rem;
+  border-radius: 0.2rem;
+}
+
+.optionContent {
+  min-width: 0;
+  flex: 1;
+}
+
+.listbox {
+  max-height: 17.5rem;
+}
+
+.createContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem !important;
+}
+
+.colorPalette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.colorChoice {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid #fff !important;
+  border-radius: 50% !important;
+}
+
+.colorChoice[aria-checked="true"],
+.colorChoiceSelected {
+  border-color: #fff !important;
+  box-shadow: 0 0 0 3px #1976d2 !important;
+  transform: scale(1.08);
+}
+
+.colorChoiceCheck {
+  color: #172033;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+}

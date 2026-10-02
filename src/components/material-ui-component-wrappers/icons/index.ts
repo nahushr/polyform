@@ -1,0 +1,11 @@
+export { default as AddPhotoAlternate } from "@mui/icons-material/AddPhotoAlternate";
+export { default as ArrowDropDown } from "@mui/icons-material/ArrowDropDown";
+export { default as CancelOutlined } from "@mui/icons-material/CancelOutlined";
+export { default as CloudUpload } from "@mui/icons-material/CloudUpload";
+export { default as Delete } from "@mui/icons-material/Delete";
+export { default as ImageOutlined } from "@mui/icons-material/ImageOutlined";
+export { default as PaletteOutlined } from "@mui/icons-material/PaletteOutlined";
+export { default as InsertDriveFile } from "@mui/icons-material/InsertDriveFile";
+export { default as Search } from "@mui/icons-material/Search";
+export { default as Visibility } from "@mui/icons-material/Visibility";
+export { default as VisibilityOff } from "@mui/icons-material/VisibilityOff";

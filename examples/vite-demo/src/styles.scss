@@ -1,0 +1,78 @@
+html {
+  min-width: 320px;
+  background: #f4f6f8;
+}
+
+body {
+  margin: 0;
+}
+
+.demo-page {
+  padding-top: 3rem;
+  padding-bottom: 4rem;
+}
+
+.demo-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.demo-intro h1 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.demo-intro p {
+  max-width: 42rem;
+  margin: 0;
+}
+
+.demo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.demo-form__card {
+  border: 1px solid #e3e8ef;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(28, 41, 61, 0.05);
+}
+
+.demo-form__card--essentials {
+  border-color: #cfd9ff;
+  background: linear-gradient(135deg, #fff 0%, #f8faff 100%);
+}
+
+.demo-form__card--profile {
+  border-color: #ddcffc;
+  background: linear-gradient(135deg, #fff 0%, #fbf9ff 100%);
+}
+
+.demo-form__card-title {
+  color: #17233c;
+  font-size: 1.25rem;
+}
+
+.demo-form__card-title--essentials {
+  color: #304bb1;
+}
+
+.demo-form__card-title--profile {
+  color: #6040a4;
+}
+
+.demo-form__card-subtitle {
+  max-width: 44rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 599px) {
+  .demo-page {
+    padding-top: 1.5rem;
+  }
+}

@@ -1,0 +1,38 @@
+.root {
+  min-width: 0;
+  width: 100%;
+}
+
+.autocomplete:global(.MuiAutocomplete-root) {
+  width: 100%;
+
+  :global(.MuiAutocomplete-inputRoot.MuiFilledInput-root) {
+    min-height: 68px !important;
+    height: auto;
+    align-items: flex-end !important;
+    flex-wrap: wrap;
+    padding-top: 22px !important;
+    padding-bottom: 5px !important;
+  }
+
+  :global(.MuiAutocomplete-tag) {
+    margin-top: 2px;
+    margin-bottom: 2px;
+  }
+
+  :global(.MuiAutocomplete-input) {
+    min-width: 2rem !important;
+    padding-top: 0 !important;
+    padding-bottom: 2px !important;
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  min-height: 2.5rem;
+}
+
+.listbox {
+  max-height: 17.5rem;
+}

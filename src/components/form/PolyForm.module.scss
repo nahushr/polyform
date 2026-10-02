@@ -1,0 +1,134 @@
+.field-grid-item {
+  min-width: 0;
+}
+
+.field-loading {
+  min-height: 5rem;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    var(--app-input, #f1f3f6) 25%,
+    var(--app-hover, #e8ecf1) 50%,
+    var(--app-input, #f1f3f6) 75%
+  );
+  background-size: 200% 100%;
+  animation: polyform-loading 1.2s ease-in-out infinite;
+}
+
+@keyframes polyform-loading {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.form-card {
+  min-width: 0;
+  padding: 1.5rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+.card-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.card-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.card-subtitle {
+  margin: 0;
+  color: var(--app-text-muted, #64748b);
+}
+
+.card-divider:global(.MuiDivider-root) {
+  margin-top: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.section + .section {
+  margin-top: 1.5rem;
+}
+
+.field-with-end-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.field-main {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.field-end {
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.switch-field {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  min-height: 48px;
+}
+
+.choice-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.divider {
+  margin-top: 0.75rem;
+}
+
+.divider-spacer {
+  height: 0.75rem;
+}
+
+@media (min-width: 600px) {
+  .field-with-end-content {
+    flex-direction: row;
+  }
+
+  .field-end {
+    width: auto;
+  }
+}
