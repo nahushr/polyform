@@ -32,6 +32,7 @@ export enum FieldType {
   EmojiText = "emoji-text",
   Color = "color",
   KeyValue = "key-value",
+  KeyValueSelect = "key-value-select",
 }
 
 export const ADDRESS_TYPES_ARRAY = [

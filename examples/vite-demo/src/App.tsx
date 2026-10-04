@@ -1,5 +1,6 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Paper, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import {
   FieldType,
   PolyForm,
@@ -50,15 +51,15 @@ interface DemoFormValues {
   preferredChannelRow: string;
   leadLabels: LeadLabelOption[];
   technologies: string[];
-  featureEnabled: boolean;
   completion: number;
   priceRange: [number, number];
   starRating: number | null;
-  emojiRating: number | null;
+  emojiMessage: string;
   brandColor: string;
   openingTime: Date | null;
   bookingWindow: DateRangeValue;
   metadata: KeyValueEntry[];
+  selectableMetadata: KeyValueEntry[];
 }
 
 // This is the only field configuration array: it contains every built-in type.
@@ -328,12 +329,6 @@ const showcaseFields: FieldConfig<DemoFormValues>[] = [
     placeholder: "Choose technologies",
   },
   {
-    name: "featureEnabled",
-    label: "Switch / toggle",
-    type: FieldType.Switch,
-    switchLabel: "Enable notifications",
-  },
-  {
     name: "completion",
     label: "Slider",
     type: FieldType.Slider,
@@ -367,11 +362,12 @@ const showcaseFields: FieldConfig<DemoFormValues>[] = [
     gridSize: { xs: 12, sm: 6 },
   },
   {
-    name: "emojiRating",
-    label: "Emoji rating",
-    type: FieldType.Rating,
-    ratingVariant: "emoji",
-    gridSize: { xs: 12, sm: 6 },
+    name: "emojiMessage",
+    label: "Chat message",
+    type: FieldType.EmojiText,
+    placeholder: "Add a message…",
+    maxLength: 1000,
+    gridSize: { xs: 12, sm: 12 },
   },
   {
     name: "brandColor",
@@ -404,10 +400,40 @@ const showcaseFields: FieldConfig<DemoFormValues>[] = [
     addButtonLabel: "Add metadata pair",
     gridSize: { xs: 12, sm: 12 },
   },
+  {
+    name: "selectableMetadata",
+    label: "Dropdown key-value metadata",
+    type: FieldType.KeyValueSelect,
+    keyOptions: [
+      { value: "environment", label: "Environment" },
+      { value: "region", label: "Region" },
+      { value: "deployment", label: "Deployment" },
+    ],
+    valueOptionsByKey: {
+      environment: [
+        { value: "development", label: "Development" },
+        { value: "staging", label: "Staging" },
+        { value: "production", label: "Production" },
+      ],
+      region: [
+        { value: "us-east", label: "US East" },
+        { value: "us-west", label: "US West" },
+        { value: "eu-west", label: "EU West" },
+      ],
+      deployment: [
+        { value: "blue", label: "Blue" },
+        { value: "green", label: "Green" },
+      ],
+    },
+    keyPlaceholder: "Choose a property",
+    valuePlaceholder: "Choose a value",
+    addButtonLabel: "Add dropdown pair",
+    gridSize: { xs: 12, sm: 12 },
+  },
 ];
 
 const advancedControlsStart = showcaseFields.findIndex(
-  (field) => field.name === "featureEnabled",
+  (field) => field.name === "completion",
 );
 
 const showcaseCards: FormCardConfig<DemoFormValues>[] = [
@@ -519,17 +545,20 @@ const emptyValues: DemoFormValues = {
     },
   ],
   technologies: ["react", "typescript"],
-  featureEnabled: true,
   completion: 65,
   priceRange: [100, 400],
   starRating: 4.5,
-  emojiRating: 4,
+  emojiMessage: "Thanks for reaching out! 👋",
   brandColor: "#3957d7",
   openingTime: null,
   bookingWindow: { start: null, end: null },
   metadata: [
     { key: "environment", value: "production" },
     { key: "retryLimit", value: "3" },
+  ],
+  selectableMetadata: [
+    { key: "environment", value: "production" },
+    { key: "region", value: "us-east" },
   ],
 };
 
@@ -538,8 +567,29 @@ const App = (): JSX.Element => {
     control,
     setValue,
     trigger,
+    handleSubmit,
     formState: { errors },
   } = useForm<DemoFormValues>({ defaultValues: emptyValues });
+  const [submittedValues, setSubmittedValues] = useState<DemoFormValues | null>(
+    null,
+  );
+
+  const formatSubmittedValues = (): string =>
+    JSON.stringify(
+      submittedValues,
+      (_key, value: unknown) => {
+        if (typeof File !== "undefined" && value instanceof File) {
+          return {
+            name: value.name,
+            type: value.type,
+            size: value.size,
+            lastModified: value.lastModified,
+          };
+        }
+        return value;
+      },
+      2,
+    );
 
   return (
     <Container maxWidth="lg" className="demo-page">
@@ -555,7 +605,12 @@ const App = (): JSX.Element => {
         </Typography>
       </Box>
 
-      <Box className="demo-form">
+      <Box
+        component="form"
+        className="demo-form"
+        onSubmit={handleSubmit((values) => setSubmittedValues(values))}
+        noValidate
+      >
         <PolyForm
           cards={showcaseCards}
           control={control}
@@ -569,6 +624,24 @@ const App = (): JSX.Element => {
             sectionTitle: "demo-form__section-title",
           }}
         />
+        <div className="demo-form__actions">
+          <Button type="submit" variant="contained" size="large">
+            Submit
+          </Button>
+        </div>
+        {submittedValues && (
+          <Paper
+            component="section"
+            className="demo-form__result"
+            elevation={0}
+            aria-live="polite"
+          >
+            <Typography component="h2" variant="h6">
+              Submitted form values
+            </Typography>
+            <pre>{formatSubmittedValues()}</pre>
+          </Paper>
+        )}
       </Box>
     </Container>
   );

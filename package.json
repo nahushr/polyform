@@ -4,10 +4,15 @@
   "description": "Config driven React forms built from reusable field components.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nahushr/polyform.git"
+  },
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "assets/polyform-logo.png"
   ],
   "main": "./dist/polyform.js",
   "module": "./dist/polyform.js",
@@ -26,8 +31,8 @@
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run build",
-    "dev:example": "npm run dev --prefix examples/vite-demo",
-    "preview:example": "npm run preview --prefix examples/vite-demo"
+    "dev:example": "npm run dev --workspace polyform-vite-demo",
+    "preview:example": "npm run preview --workspace polyform-vite-demo"
   },
   "peerDependencies": {
     "@emotion/react": "^11.11.0",
@@ -86,13 +91,16 @@
     "@types/node": "^20.14.12",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^6.1.1",
     "country-state-city": "^3.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.49.3",
     "sass-embedded": "^1.93.3",
     "typescript": "^5.3.3",
-    "vite": "^5.0.8"
-  }
+    "vite": "^8.3.2"
+  },
+  "workspaces": [
+    "examples/vite-demo"
+  ]
 }

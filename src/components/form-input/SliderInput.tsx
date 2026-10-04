@@ -72,7 +72,7 @@ const SliderInput = ({
         </AppTypography>
       </AppBox>
       <AppSlider
-        aria-label={label}
+        aria-label={range ? undefined : label}
         getAriaLabel={range ? (index) => `${label} ${index === 0 ? "minimum" : "maximum"}` : undefined}
         value={sliderValue}
         onChange={(_event, nextValue) => onChange(nextValue)}

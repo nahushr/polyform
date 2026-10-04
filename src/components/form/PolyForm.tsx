@@ -42,8 +42,10 @@ import {
   DateRangePickerInput,
   DateTimePickerInput,
   EmailInput,
+  EmojiTextInput,
   ImageUploadInput,
   KeyValueInput,
+  KeyValueSelectInput,
   LazyAutocompleteInput,
   LeadLabels,
   MultipleFileUploadInput,
@@ -62,6 +64,7 @@ import {
   type DateTimeValue,
   type CodeLanguage,
   type KeyValueEntry,
+  type KeyValueSelectOption,
   type LazyFetchFunction,
   type LazyOption,
   type LeadLabelOption,
@@ -133,6 +136,7 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   // For textarea fields
   rows?: number;
   placeholder?: string;
+  maxLength?: number;
   // For image upload fields
   imageSize?: number;
   maxSizeMB?: number;
@@ -161,8 +165,6 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   // For rating fields
   ratingMax?: number;
   ratingPrecision?: number;
-  ratingVariant?: "stars" | "emoji";
-  ratingEmojis?: string[];
   // For date fields
   minDate?: Date;
   maxDate?: Date;
@@ -177,6 +179,9 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   keyPlaceholder?: string;
   valuePlaceholder?: string;
   addButtonLabel?: string;
+  keyOptions?: KeyValueSelectOption[];
+  valueOptions?: KeyValueSelectOption[];
+  valueOptionsByKey?: Record<string, KeyValueSelectOption[]>;
   // For datetime fields
   dateTimeLabel?: string;
   timezoneLabel?: string;
@@ -316,6 +321,7 @@ export const PolyForm = <
       initialOption,
       rows = 4,
       placeholder,
+      maxLength,
       imageSize = 150,
       maxSizeMB = 5,
       maxFiles = 10,
@@ -338,8 +344,6 @@ export const PolyForm = <
       sliderUnit = "",
       ratingMax = 5,
       ratingPrecision = 1,
-      ratingVariant = "stars",
-      ratingEmojis,
       minDate,
       maxDate,
       dateFormat,
@@ -351,6 +355,9 @@ export const PolyForm = <
       keyPlaceholder,
       valuePlaceholder,
       addButtonLabel,
+      keyOptions = [],
+      valueOptions = [],
+      valueOptionsByKey,
       dateTimeLabel,
       timezoneLabel,
       dateTimeLayout,
@@ -870,8 +877,22 @@ export const PolyForm = <
                       onChange={fieldProps.onChange}
                       max={ratingMax}
                       precision={ratingPrecision}
-                      variant={ratingVariant}
-                      emojis={ratingEmojis}
+                      disabled={isFieldDisabled}
+                      required={required}
+                      error={!!fieldError}
+                      helperText={fieldError?.message}
+                    />
+                  );
+                }
+
+                if (type === FieldType.EmojiText) {
+                  return (
+                    <EmojiTextInput
+                      label={label}
+                      value={fieldProps.value as string | undefined}
+                      onChange={fieldProps.onChange}
+                      placeholder={placeholder}
+                      maxLength={maxLength}
                       disabled={isFieldDisabled}
                       required={required}
                       error={!!fieldError}
@@ -886,6 +907,26 @@ export const PolyForm = <
                       label={label}
                       value={fieldProps.value as KeyValueEntry[] | undefined}
                       onChange={fieldProps.onChange}
+                      disabled={isFieldDisabled}
+                      required={required}
+                      error={!!fieldError}
+                      helperText={fieldError?.message}
+                      keyPlaceholder={keyPlaceholder}
+                      valuePlaceholder={valuePlaceholder}
+                      addButtonLabel={addButtonLabel}
+                    />
+                  );
+                }
+
+                if (type === FieldType.KeyValueSelect) {
+                  return (
+                    <KeyValueSelectInput
+                      label={label}
+                      value={fieldProps.value as KeyValueEntry[] | undefined}
+                      onChange={fieldProps.onChange}
+                      keyOptions={keyOptions}
+                      valueOptions={valueOptions}
+                      valueOptionsByKey={valueOptionsByKey}
                       disabled={isFieldDisabled}
                       required={required}
                       error={!!fieldError}
@@ -986,6 +1027,7 @@ export const PolyForm = <
                       multiline
                       rows={rows}
                       placeholder={placeholder}
+                      maxLength={maxLength}
                     />
                   );
                 }
@@ -1010,6 +1052,7 @@ export const PolyForm = <
                   <TextFieldInput
                     {...fieldProps}
                     value={displayValue}
+                    maxLength={maxLength}
                     onChange={(e) => {
                       const val = e.target.value;
                       if (isNumberField) {

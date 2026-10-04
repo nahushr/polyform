@@ -37,6 +37,35 @@ body {
   gap: 1.25rem;
 }
 
+.demo-form__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.demo-form__result {
+  overflow: hidden;
+  border: 1px solid #d8dfeb;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.demo-form__result h2 {
+  padding: 1rem 1.25rem 0;
+}
+
+.demo-form__result pre {
+  max-height: 34rem;
+  margin: 0;
+  overflow: auto;
+  padding: 1.25rem;
+  color: #17233c;
+  background: #f8faff;
+  font: 0.85rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
 .demo-form__card {
   border: 1px solid #e3e8ef;
   border-radius: 14px;

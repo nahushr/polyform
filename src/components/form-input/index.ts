@@ -17,6 +17,8 @@ export {
 export { default as TimePickerInput } from "./TimePickerInput";
 export { default as ColorPickerInput } from "./ColorPickerInput";
 export { default as EmailInput } from "./EmailInput";
+export { default as EmojiTextInput } from "./EmojiTextInput";
+export type { EmojiTextInputProps } from "./EmojiTextInput";
 export { default as FileDropZone } from "./FileDropZone";
 export { default as ImageUploadInput } from "./ImageUploadInput";
 export { default as ImageSlotsUpload } from "./ImageSlotsUpload";
@@ -26,6 +28,7 @@ export type { MultipleImageUploadInputProps } from "./MultipleImageUploadInput";
 export { default as MultipleFileUploadInput } from "./MultipleFileUploadInput";
 export type { MultipleFileUploadInputProps } from "./MultipleFileUploadInput";
 export { default as KeyValueInput } from "./KeyValueInput";
+export { default as KeyValueSelectInput } from "./KeyValueSelectInput";
 export { default as MultiSelectInput } from "./MultiSelectInput";
 export type { MultiSelectInputProps } from "./MultiSelectInput";
 export { default as PasswordInput } from "./PasswordInput";
@@ -61,6 +64,10 @@ export type {
 export type { PasswordInputProps } from "./PasswordInput";
 export type { PhoneInputProps } from "./PhoneInput";
 export type { KeyValueEntry, KeyValueInputProps } from "./KeyValueInput";
+export type {
+  KeyValueSelectInputProps,
+  KeyValueSelectOption,
+} from "./KeyValueSelectInput";
 export type { RatingInputProps } from "./RatingInput";
 export type { RadioGroupInputProps, RadioInputProps } from "./RadioInput";
 export type { SelectInputProps } from "./SelectInput";

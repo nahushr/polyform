@@ -1,9 +1,8 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useState, type FocusEvent, type MouseEvent } from "react";
 
 import { PaletteOutlined as PaletteOutlinedIcon } from "@/components/material-ui-component-wrappers/icons";
 import {
   AppBox,
-  AppButtonBase,
   AppInputAdornment,
   AppPopover,
   AppTextField,
@@ -61,12 +60,29 @@ const ColorPickerInput = forwardRef<HTMLDivElement, ColorPickerInputProps>(
       InputProps,
       inputProps,
       className,
+      onClick,
+      onFocus,
       ...props
     },
     ref,
   ) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const isOpen = Boolean(anchorEl);
+    const openPicker = (
+      event:
+        | MouseEvent<HTMLDivElement>
+        | FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ): void => setAnchorEl(event.currentTarget);
+    const handleClick = (event: MouseEvent<HTMLDivElement>): void => {
+      openPicker(event);
+      onClick?.(event);
+    };
+    const handleFocus = (
+      event: FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ): void => {
+      openPicker(event);
+      onFocus?.(event);
+    };
 
     return (
       <AppBox ref={ref} className={styles.root}>
@@ -83,23 +99,31 @@ const ColorPickerInput = forwardRef<HTMLDivElement, ColorPickerInputProps>(
           required={required}
           placeholder="#3957d7 or rgb(57, 87, 215)"
           className={className}
+          onClick={handleClick}
+          onFocus={handleFocus}
           InputLabelProps={{ shrink: true, ...InputLabelProps }}
           InputProps={{
             disableUnderline: variant === "filled",
             ...InputProps,
+            startAdornment: (
+              <AppInputAdornment position="start" className={styles.swatchAdornment}>
+                <input
+                  aria-hidden="true"
+                  className={styles.swatch}
+                  type="color"
+                  value={colorToHex(value)}
+                  tabIndex={-1}
+                  disabled
+                />
+                {InputProps?.startAdornment}
+              </AppInputAdornment>
+            ),
             endAdornment: (
               <AppInputAdornment position="end">
                 {InputProps?.endAdornment}
-                <AppButtonBase
-                  type="button"
-                  aria-label="Open color picker"
-                  aria-expanded={isOpen}
-                  disabled={disabled}
-                  className={styles.pickerButton}
-                  onClick={(event) => setAnchorEl(event.currentTarget)}
-                >
+                <span aria-hidden="true" className={styles.pickerIcon}>
                   <PaletteOutlinedIcon fontSize="small" />
-                </AppButtonBase>
+                </span>
               </AppInputAdornment>
             ),
           }}

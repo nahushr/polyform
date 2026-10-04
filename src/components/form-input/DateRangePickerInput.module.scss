@@ -3,14 +3,72 @@
   min-width: 0;
 }
 
-.fields {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1rem;
+.calendarPopover {
+  width: min(22rem, calc(100vw - 24px));
+  padding: 0.5rem 0.75rem 0.75rem;
+  border: 1px solid var(--app-divider, #e2e8f0);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.18);
 }
 
-@media (min-width: 600px) {
-  .fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+.pickerHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  padding: 0.625rem 0.5rem 0.25rem;
+}
+
+.pickerTitle {
+  color: var(--app-text, #0f172a);
+  font-weight: 600;
+}
+
+.pickerHint,
+.rangeSummary {
+  color: var(--app-text-muted, #64748b);
+}
+
+.calendar {
+  width: 100%;
+
+  :global(.MuiDateCalendar-root) {
+    width: 100%;
   }
+
+  :global(.MuiDayCalendar-weekContainer) {
+    margin: 0;
+  }
+}
+
+.rangeDay {
+  border-radius: 0;
+}
+
+.rangeDayStart,
+.rangeDayEnd {
+  border-radius: 50%;
+}
+
+.rangeDayInRange {
+  border-radius: 0;
+  background-color: var(--app-selected, #e8edff) !important;
+  color: var(--app-text, #0f172a) !important;
+}
+
+.pickerActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0 0.5rem 0.25rem;
+  border-top: 1px solid var(--app-divider, #e2e8f0);
+}
+
+.clearButton {
+  margin-left: -0.5rem;
+  text-transform: none;
+}
+
+.rangeSummary {
+  text-align: right;
 }

@@ -35,7 +35,7 @@ export default defineConfig({
       entry: `${packageRoot}src/index.ts`,
       formats: ["es"],
       fileName: "polyform",
-      cssFileName: "polyform",
+      cssFileName: "style",
     },
     rollupOptions: {
       external: (id) =>
