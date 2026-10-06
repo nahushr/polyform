@@ -10,8 +10,8 @@ import {
   type FormCardConfig,
   type KeyValueEntry,
   type LeadLabelOption,
-} from "@nahushraichura/polyform";
-import "@nahushraichura/polyform/style.css";
+} from "@cinecrew/polyform";
+import "@cinecrew/polyform/style.css";
 
 interface DemoFormValues {
   firstName: string;

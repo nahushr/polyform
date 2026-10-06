@@ -27,7 +27,7 @@
 ## Install and import
 
 ```sh
-npm install @nahushraichura/polyform react react-dom react-hook-form @mui/material @mui/icons-material @mui/x-date-pickers @emotion/react @emotion/styled react-toastify
+npm install @cinecrew/polyform react react-dom react-hook-form @mui/material @mui/icons-material @mui/x-date-pickers @emotion/react @emotion/styled react-toastify
 ```
 
 PolyForm also installs its field-specific dependencies for rich text and phone input. If you use the `Address` field with the built-in country/state/city lookup, install the optional dataset package:
@@ -39,7 +39,7 @@ npm install country-state-city
 Import the package stylesheet once in your app entry:
 
 ```tsx
-import "@nahushraichura/polyform/style.css";
+import "@cinecrew/polyform/style.css";
 ```
 
 Mount a `ToastContainer` from `react-toastify` in your app if you use the included file or image upload controls; those controls use it to show upload validation and status messages.
@@ -50,7 +50,7 @@ Put the form fields in one array and arrange slices of that array into as many c
 
 ```tsx
 import { useForm } from "react-hook-form";
-import { FieldType, PolyForm, type FormCardConfig } from "@nahushraichura/polyform";
+import { FieldType, PolyForm, type FormCardConfig } from "@cinecrew/polyform";
 
 interface LeadFormData {
   firstName: string;
@@ -62,7 +62,7 @@ const fields = [
   { name: "firstName", label: "First name", required: true },
   { name: "email", label: "Email", type: FieldType.Email, required: true },
   { name: "notes", label: "Notes", type: FieldType.Textarea, rows: 4 },
-] satisfies import("@nahushraichura/polyform").FieldConfig<LeadFormData>[];
+] satisfies import("@cinecrew/polyform").FieldConfig<LeadFormData>[];
 
 const cards: FormCardConfig<LeadFormData>[] = [
   {

@@ -15,7 +15,7 @@
     "@mui/icons-material": "^5.15.0",
     "@mui/material": "^5.15.0",
     "@mui/x-date-pickers": "^7.0.0",
-    "@nahushraichura/polyform": "file:../..",
+    "@cinecrew/polyform": "file:../..",
     "country-state-city": "^3.2.1",
     "date-fns": "^2.30.0",
     "react": "^18.2.0",

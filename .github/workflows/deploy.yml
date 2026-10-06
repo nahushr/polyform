@@ -127,7 +127,7 @@ jobs:
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
-          scope: '@nahushraichura'
+          scope: '@cinecrew'
 
       - name: Verify npm publishing identity
         if: env.HAS_NPM_TOKEN == 'true'
@@ -143,7 +143,7 @@ jobs:
         if: env.HAS_NPM_TOKEN == 'true'
         id: release
         env:
-          PACKAGE_NAME: '@nahushraichura/polyform'
+          PACKAGE_NAME: '@cinecrew/polyform'
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
