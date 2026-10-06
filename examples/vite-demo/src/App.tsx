@@ -149,7 +149,7 @@ const showcaseFields: FieldConfig<DemoFormValues>[] = [
     name: "assignedAgentId",
     label: "Lazy autocomplete",
     type: FieldType.LazyAutocomplete,
-    fetchOptions: async (searchText, start, pageSize) => {
+    fetchOptions: (searchText, start, pageSize) => {
       const names = ["Avery Morgan", "Jordan Lee", "Morgan Patel", "Riley Chen"];
       const matchingNames = names.filter((name) =>
         name.toLowerCase().includes(searchText.trim().toLowerCase()),
@@ -157,11 +157,11 @@ const showcaseFields: FieldConfig<DemoFormValues>[] = [
       const options = matchingNames
         .slice(start, start + pageSize)
         .map((label, index) => ({ value: start + index + 101, label }));
-      return {
+      return Promise.resolve({
         options,
         hasMore: start + options.length < matchingNames.length,
         totalCount: matchingNames.length,
-      };
+      });
     },
     lazyPageSize: 2,
     lazyDebounceMs: 250,

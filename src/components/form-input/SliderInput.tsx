@@ -29,6 +29,17 @@ export interface SliderInputProps {
   helperText?: string;
 }
 
+const getSliderValue = (
+  range: boolean,
+  value: number | number[] | undefined,
+  min: number,
+  max: number,
+): number | number[] => {
+  if (range) return Array.isArray(value) ? value : [min, max];
+  if (Array.isArray(value)) return value[0] ?? min;
+  return value ?? min;
+};
+
 const SliderInput = ({
   label,
   value,
@@ -45,13 +56,7 @@ const SliderInput = ({
   error = false,
   helperText,
 }: SliderInputProps): JSX.Element => {
-  const sliderValue = range
-    ? Array.isArray(value)
-      ? value
-      : [min, max]
-    : Array.isArray(value)
-      ? (value[0] ?? min)
-      : (value ?? min);
+  const sliderValue = getSliderValue(range, value, min, max);
 
   const isPrefixUnit = ["$", "€", "£", "¥", "₹"].includes(unit);
   const formatValue = (currentValue: number): string =>

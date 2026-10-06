@@ -70,14 +70,13 @@ const MultipleImageUploadInput = ({
     const files = Array.from(fileList);
     if (!files.length) return;
 
-    const nextImages: Record<string, string> = {};
     const existingNames = new Set(entries.map(([name]) => name));
     const remaining = Math.max(0, maxFiles - entries.length);
     const messages: string[] = [];
-    let acceptedCount = 0;
+    const candidates: Array<{ file: File; key: string }> = [];
 
     for (const file of files) {
-      if (entries.length + acceptedCount >= maxFiles) {
+      if (candidates.length >= remaining) {
         messages.push(`You can add up to ${maxFiles} images.`);
         break;
       }
@@ -90,19 +89,27 @@ const MultipleImageUploadInput = ({
         continue;
       }
 
-      try {
-        const key = getUniqueFileName(file.name, existingNames);
-        nextImages[key] = await readAsDataUrl(file);
-        existingNames.add(key);
-        acceptedCount += 1;
-      } catch {
-        messages.push(`Could not read ${file.name}.`);
-      }
+      const key = getUniqueFileName(file.name, existingNames);
+      existingNames.add(key);
+      candidates.push({ file, key });
     }
 
-    if (remaining === 0 && files.length > 0) {
-      messages.push(`You can add up to ${maxFiles} images.`);
-    }
+    type ImageReadResult =
+      | { key: string; dataUrl: string }
+      | { key: string; fileName: string };
+    const results: ImageReadResult[] = await Promise.all(candidates.map(async ({ file, key }) => {
+      try {
+        return { key, dataUrl: await readAsDataUrl(file) };
+      } catch {
+        return { key, fileName: file.name };
+      }
+    }));
+    const nextImages: Record<string, string> = {};
+    results.forEach((result) => {
+      if ("dataUrl" in result) nextImages[result.key] = result.dataUrl;
+      else messages.push(`Could not read ${result.fileName}.`);
+    });
+    const acceptedCount = Object.keys(nextImages).length;
     setValidationMessage(messages.join(" "));
     if (acceptedCount > 0) onChange({ ...value, ...nextImages });
   };

@@ -66,7 +66,7 @@ const RadioGroupInput = forwardRef<HTMLDivElement, RadioGroupInputProps>(
       const newValue = event.target.value;
       // Try to convert to number if it's a numeric string
       const numericValue =
-        !isNaN(Number(newValue)) && newValue !== ""
+        !Number.isNaN(Number(newValue)) && newValue !== ""
           ? Number(newValue)
           : newValue;
       onChange?.(numericValue);

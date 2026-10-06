@@ -27,7 +27,7 @@ const randomFraction = (): number => {
 
   const value = new Uint32Array(1);
   cryptoApi.getRandomValues(value);
-  return (value[0] ?? 0) / 0x1_0000_0000;
+  return (value[0] ?? 0) / (2 ** 32);
 };
 
 const sample = <T,>(items: readonly T[]): T | undefined =>
@@ -137,71 +137,87 @@ const normalizeCountryName = (country: string): string => {
   return aliases[country.trim().toLowerCase()] ?? country.trim();
 };
 
+type LocationMapper = typeof import("../../utils/stateCityMapper");
+
+const chooseAddressCountry = (
+  field: FieldConfig<FieldValues>,
+  countryNames: string[],
+): string => {
+  const restricted = (field.allowedCountries ?? []).map(normalizeCountryName);
+  const candidates = restricted.length
+    ? restricted.filter((country) => countryNames.includes(country))
+    : countryNames;
+  if (restricted.length && !candidates.length) {
+    throw new Error("No configured countries are available in the address dataset.");
+  }
+  return candidates.find((country) => country === "India")
+    ?? candidates.find((country) => country === "United States")
+    ?? candidates[0]
+    ?? "India";
+};
+
+const chooseAddressState = (
+  field: FieldConfig<FieldValues>,
+  mapper: LocationMapper,
+  country: string,
+): string => {
+  const datasetStates = mapper.getStatesByCountry(country);
+  const candidates = field.states?.length
+    ? field.states.filter((state) => datasetStates.includes(state))
+    : datasetStates;
+  if (field.states?.length && !candidates.length) {
+    throw new Error("No configured states are available for the selected country.");
+  }
+  const statesWithConfiguredCities = field.cities?.length
+    ? candidates.filter((state) => {
+        const stateCities = mapper.getCitiesByState(state, country);
+        return field.cities?.some((city) => stateCities.includes(city)) ?? false;
+      })
+    : candidates;
+  const statePool = statesWithConfiguredCities.length ? statesWithConfiguredCities : candidates;
+  const preferredState = country === "India" ? "Maharashtra" : "California";
+  const state = statesWithConfiguredCities.includes(preferredState)
+    ? preferredState
+    : statePool[0] ?? "";
+  if (!state) throw new Error("No states are available for the selected country.");
+  return state;
+};
+
+const chooseAddressCity = (
+  field: FieldConfig<FieldValues>,
+  mapper: LocationMapper,
+  country: string,
+  state: string,
+): string => {
+  const datasetCities = mapper.getCitiesByState(state, country);
+  const candidates = field.cities?.length
+    ? field.cities.filter((city) => datasetCities.includes(city))
+    : datasetCities;
+  if (field.cities?.length && !candidates.length) {
+    throw new Error("No configured cities are available for the selected state.");
+  }
+  const preferredCity = country === "India" ? "Mumbai" : "San Francisco";
+  const city = candidates.includes(preferredCity) ? preferredCity : candidates[0] ?? "";
+  if (!city) throw new Error("No cities are available for the selected state.");
+  return city;
+};
+
 const getAddressTestValue = async (
   field: FieldConfig<FieldValues>,
   identity: ReturnType<typeof getIdentity>,
 ): Promise<Record<string, string>> => {
   const mapper = await import("../../utils/stateCityMapper");
-  const countryNames = mapper.getAllCountries();
-  const restrictedCountries = (field.allowedCountries ?? []).map(normalizeCountryName);
-  const validCountries = restrictedCountries.length
-    ? restrictedCountries.filter((country) => countryNames.includes(country))
-    : countryNames;
-  if (restrictedCountries.length && validCountries.length === 0) {
-    throw new Error("No configured countries are available in the address dataset.");
-  }
-  const preferredCountry = validCountries.find((country) => country === "India")
-    ?? validCountries.find((country) => country === "United States")
-    ?? validCountries[0]
-    ?? "India";
-
-  const datasetStates = mapper.getStatesByCountry(preferredCountry);
-  const statesForCountry = field.states?.length
-    ? field.states.filter((state) => datasetStates.includes(state))
-    : datasetStates;
-  if (field.states?.length && statesForCountry.length === 0) {
-    throw new Error("No configured states are available for the selected country.");
-  }
-  const preferredState = preferredCountry === "India" ? "Maharashtra" : "California";
-  const statesWithConfiguredCities = field.cities?.length
-    ? statesForCountry.filter((candidateState) => {
-        const stateCities = mapper.getCitiesByState(candidateState, preferredCountry);
-        return field.cities?.some((city) => stateCities.includes(city)) ?? false;
-      })
-    : [];
-  const statePool = statesWithConfiguredCities.length
-    ? statesWithConfiguredCities
-    : statesForCountry;
-  const state = statePool.includes(preferredState)
-    ? preferredState
-    : statePool[0] ?? "";
-  if (!state) {
-    throw new Error("No states are available for the selected country.");
-  }
-
-  const datasetCities = mapper.getCitiesByState(state, preferredCountry);
-  const citiesForState = field.cities?.length
-    ? field.cities.filter((city) => datasetCities.includes(city))
-    : datasetCities;
-  if (field.cities?.length && citiesForState.length === 0) {
-    throw new Error("No configured cities are available for the selected state.");
-  }
-  const preferredCity = preferredCountry === "India" ? "Mumbai" : "San Francisco";
-  const city = citiesForState.includes(preferredCity)
-    ? preferredCity
-    : citiesForState[0] ?? "";
-  if (!city) {
-    throw new Error("No cities are available for the selected state.");
-  }
-
+  const country = chooseAddressCountry(field, mapper.getAllCountries());
+  const state = chooseAddressState(field, mapper, country);
+  const city = chooseAddressCity(field, mapper, country, state);
   return {
     streetAddress: `${identity.suffix} Market Street`,
     streetAddress2: "Suite 240",
     streetAddress3: "",
     city,
     state,
-    postalCode: preferredCountry === "India" ? "400001" : "94103",
-    country: preferredCountry,
+    postalCode: country === "India" ? "400001" : "94103",
+    country,
     addressType: "OFFICE",
     nameOnAddress: `${identity.firstName} ${identity.lastName}`,
     emailOnAddress: getEmail(identity.firstName, identity.lastName, identity.suffix),
@@ -209,42 +225,160 @@ const getAddressTestValue = async (
   };
 };
 
+const getLazyOptionTestValue = async (
+  field: FieldConfig<FieldValues>,
+): Promise<unknown> => {
+  if (!field.fetchOptions) return SKIP;
+  try {
+    const result = await field.fetchOptions("", 0, field.lazyPageSize ?? 10);
+    const validOptions = Array.isArray(result.options)
+      ? result.options.filter((option) =>
+          option != null &&
+          (typeof option.value === "string" || typeof option.value === "number") &&
+          String(option.value).length > 0 &&
+          typeof option.label === "string" &&
+          option.label.trim().length > 0,
+        )
+      : [];
+    return sample(validOptions) ?? SKIP;
+  } catch {
+    return SKIP;
+  }
+};
+
+const getCustomTestValue = async (
+  field: FieldConfig<FieldValues>,
+): Promise<unknown> => {
+  try {
+    return (await field.testValue?.()) ?? SKIP;
+  } catch {
+    return SKIP;
+  }
+};
+
+const getCodeTestValue = (
+  language: string | undefined,
+  identity: ReturnType<typeof getIdentity>,
+): string => {
+  const email = getEmail(identity.firstName, identity.lastName, identity.suffix);
+  switch (language) {
+    case "sql": return "SELECT id, email\nFROM leads\nWHERE status = 'qualified';";
+    case "python": return `def greet(name):\n    return f"Hello, {name}!"\n\nprint(greet("${identity.firstName}"))`;
+    case "json": return JSON.stringify({ name: identity.firstName, email }, null, 2);
+    case "html": return `<section><h1>Hello, ${identity.firstName}</h1></section>`;
+    case "css": return ".profile {\n  color: #3957d7;\n}";
+    default: return `const lead = { name: "${identity.firstName}", email: "${email}" };`;
+  }
+};
+
+const getTextLikeTestValue = (
+  type: FieldType,
+  field: FieldConfig<FieldValues>,
+  identity: ReturnType<typeof getIdentity>,
+): unknown => {
+  if (type === FieldType.Email) return getEmail(identity.firstName, identity.lastName, identity.suffix);
+  if (type === FieldType.Phone) return "+14155552671";
+  if (type === FieldType.Password) return `Demo!${identity.suffix}Poly`;
+  if (type === FieldType.Number) return 42;
+  if (type === FieldType.RichText) {
+    return `<p>${identity.firstName} is interested in a product walkthrough and a follow-up next week.</p>`;
+  }
+  if (type === FieldType.Code) return getCodeTestValue(field.codeLanguage, identity);
+  if (type === FieldType.EmojiText) return `Thanks for reaching out, ${identity.firstName}! 👋`;
+  if (type === FieldType.Textarea) {
+    return `Demo record ${identity.suffix}: follow up about a product walkthrough next week.`;
+  }
+  return getTextValue(field, identity);
+};
+
+const getDateTestValue = (
+  type: FieldType,
+  field: FieldConfig<FieldValues>,
+  today: Date,
+): unknown => {
+  if (type === FieldType.Date) return fitDate(addDays(today, 1), field.minDate, field.maxDate);
+  if (type === FieldType.DateRange) {
+    const start = fitDate(addDays(today, 1), field.minDate, field.maxDate);
+    const end = fitDate(addDays(start, 4), field.minDate, field.maxDate);
+    return { start, end } satisfies DateRangeValue;
+  }
+  if (type === FieldType.Time) {
+    const time = new Date(today);
+    time.setHours(10, 30, 0, 0);
+    return fitDate(time, field.minTime, field.maxTime);
+  }
+  return {
+    dateTime: fitDate(addDays(today, 1), field.minDateTime, field.maxDateTime),
+    timezone: "America/New_York",
+  } satisfies DateTimeValue;
+};
+
+const getImageTestValue = (
+  type: FieldType,
+  field: FieldConfig<FieldValues>,
+  identity: ReturnType<typeof getIdentity>,
+): unknown => {
+  if (type === FieldType.Image) return makeSvgDataUrl(identity.firstName);
+  const count = Math.min(2, field.maxFiles ?? 10);
+  return Object.fromEntries(
+    Array.from({ length: count }, (_, index) => [
+      `demo-image-${index + 1}.svg`,
+      makeSvgDataUrl(index === 0 ? "Campaign" : "Team"),
+    ]),
+  );
+};
+
+const getMultipleFileTestValue = (
+  field: FieldConfig<FieldValues>,
+  identity: ReturnType<typeof getIdentity>,
+): File[] => {
+  const files = [
+    makeSampleFile(
+      "demo-lead.txt",
+      "text/plain",
+      `Demo record ${identity.suffix} for ${identity.firstName} ${identity.lastName}.`,
+    ),
+    makeSampleFile("product-overview.csv", "text/csv", "feature,status\nReusable fields,ready\n"),
+  ].filter((file): file is File => Boolean(file));
+  return files.slice(0, field.maxFiles ?? 10);
+};
+
+const getSliderTestValue = (
+  type: FieldType,
+  field: FieldConfig<FieldValues>,
+): number | number[] => {
+  const min = field.sliderMin ?? 0;
+  const max = field.sliderMax ?? 100;
+  if (type === FieldType.Slider) {
+    return roundToStep(min + (max - min) * 0.65, min, field.sliderStep);
+  }
+  return [
+    roundToStep(min + (max - min) * 0.25, min, field.sliderStep),
+    roundToStep(min + (max - min) * 0.75, min, field.sliderStep),
+  ];
+};
+
+const getSafeAddressTestValue = async (
+  field: FieldConfig<FieldValues>,
+  identity: ReturnType<typeof getIdentity>,
+): Promise<unknown> => {
+  try {
+    return await getAddressTestValue(field, identity);
+  } catch {
+    return SKIP;
+  }
+};
+
 const getTestValue = async (
   field: FieldConfig<FieldValues>,
   identity: ReturnType<typeof getIdentity>,
-): Promise<unknown | typeof SKIP> => {
+): Promise<unknown> => {
   const type = field.type ?? FieldType.Text;
   const today = new Date();
 
   // Resolve lazy/server-side dropdowns from their own data source. Never invent IDs.
-  if (type === FieldType.LazyAutocomplete) {
-    if (!field.fetchOptions) return SKIP;
-    try {
-      const result = await field.fetchOptions("", 0, field.lazyPageSize ?? 10);
-      const validOptions = Array.isArray(result.options)
-        ? result.options.filter(
-            (option) =>
-              option != null &&
-              (typeof option.value === "string" ||
-                typeof option.value === "number") &&
-              String(option.value).length > 0 &&
-              typeof option.label === "string" &&
-              option.label.trim().length > 0,
-          )
-        : [];
-      return sample(validOptions) ?? SKIP;
-    } catch {
-      return SKIP;
-    }
-  }
-
-  if (typeof field.testValue === "function") {
-    try {
-      return (await field.testValue()) ?? SKIP;
-    } catch {
-      return SKIP;
-    }
-  }
+  if (type === FieldType.LazyAutocomplete) return getLazyOptionTestValue(field);
+  if (field.testValue) return getCustomTestValue(field);
 
   switch (type) {
     case FieldType.Text:
@@ -256,54 +390,12 @@ const getTestValue = async (
     case FieldType.RichText:
     case FieldType.Code:
     case FieldType.EmojiText:
-      if (type === FieldType.Email) {
-        return getEmail(identity.firstName, identity.lastName, identity.suffix);
-      }
-      if (type === FieldType.Phone) return "+14155552671";
-      if (type === FieldType.Password) return `Demo!${identity.suffix}Poly`;
-      if (type === FieldType.Number) return 42;
-      if (type === FieldType.RichText) {
-        return `<p>${identity.firstName} is interested in a product walkthrough and a follow-up next week.</p>`;
-      }
-      if (type === FieldType.Code) {
-        switch (field.codeLanguage) {
-          case "sql":
-            return `SELECT id, email\nFROM leads\nWHERE status = 'qualified';`;
-          case "python":
-            return `def greet(name):\n    return f"Hello, {name}!"\n\nprint(greet("${identity.firstName}"))`;
-          case "json":
-            return JSON.stringify({ name: identity.firstName, email: getEmail(identity.firstName, identity.lastName, identity.suffix) }, null, 2);
-          case "html":
-            return `<section><h1>Hello, ${identity.firstName}</h1></section>`;
-          case "css":
-            return `.profile {\n  color: #3957d7;\n}`;
-          default:
-            return `const lead = { name: "${identity.firstName}", email: "${getEmail(identity.firstName, identity.lastName, identity.suffix)}" };`;
-        }
-      }
-      if (type === FieldType.EmojiText) return `Thanks for reaching out, ${identity.firstName}! 👋`;
-      if (type === FieldType.Textarea) {
-        return `Demo record ${identity.suffix}: follow up about a product walkthrough next week.`;
-      }
-      return getTextValue(field, identity);
-
+      return getTextLikeTestValue(type, field, identity);
     case FieldType.Date:
-      return fitDate(addDays(today, 1), field.minDate, field.maxDate);
-    case FieldType.DateRange: {
-      const start = fitDate(addDays(today, 1), field.minDate, field.maxDate);
-      const end = fitDate(addDays(start, 4), field.minDate, field.maxDate);
-      return { start, end } satisfies DateRangeValue;
-    }
-    case FieldType.Time: {
-      const time = new Date(today);
-      time.setHours(10, 30, 0, 0);
-      return fitDate(time, field.minTime, field.maxTime);
-    }
+    case FieldType.DateRange:
+    case FieldType.Time:
     case FieldType.DateTime:
-      return {
-        dateTime: fitDate(addDays(today, 1), field.minDateTime, field.maxDateTime),
-        timezone: "America/New_York",
-      } satisfies DateTimeValue;
+      return getDateTestValue(type, field, today);
     case FieldType.Select:
     case FieldType.Autocomplete:
     case FieldType.RadioGroup: {
@@ -315,32 +407,11 @@ const getTestValue = async (
     case FieldType.Color:
       return sample(["#3957D7", "#10A99A", "#805AD5", "#E77A7A"]);
     case FieldType.Image:
-      return makeSvgDataUrl(identity.firstName);
     case FieldType.MultipleImage: {
-      const count = Math.min(2, field.maxFiles ?? 10);
-      const images: Record<string, string> = {};
-      for (let index = 0; index < count; index += 1) {
-        images[`demo-image-${index + 1}.svg`] = makeSvgDataUrl(
-          index === 0 ? "Campaign" : "Team",
-        );
-      }
-      return images;
+      return getImageTestValue(type, field, identity);
     }
-    case FieldType.MultipleFile: {
-      const firstFile = makeSampleFile(
-        "demo-lead.txt",
-        "text/plain",
-        `Demo record ${identity.suffix} for ${identity.firstName} ${identity.lastName}.`,
-      );
-      const secondFile = makeSampleFile(
-        "product-overview.csv",
-        "text/csv",
-        "feature,status\nReusable fields,ready\n",
-      );
-      return [firstFile, secondFile]
-        .filter((file): file is File => Boolean(file))
-        .slice(0, field.maxFiles ?? 10);
-    }
+    case FieldType.MultipleFile:
+      return getMultipleFileTestValue(field, identity);
     case FieldType.Checkbox:
     case FieldType.Switch:
     case FieldType.Radio:
@@ -354,19 +425,9 @@ const getTestValue = async (
       const labels = (field.leadLabelOptions ?? []).slice(0, 2);
       return labels.length ? labels : SKIP;
     }
-    case FieldType.Slider: {
-      const min = field.sliderMin ?? 0;
-      const max = field.sliderMax ?? 100;
-      return roundToStep(min + (max - min) * 0.65, min, field.sliderStep);
-    }
-    case FieldType.RangeSlider: {
-      const min = field.sliderMin ?? 0;
-      const max = field.sliderMax ?? 100;
-      return [
-        roundToStep(min + (max - min) * 0.25, min, field.sliderStep),
-        roundToStep(min + (max - min) * 0.75, min, field.sliderStep),
-      ];
-    }
+    case FieldType.Slider:
+    case FieldType.RangeSlider:
+      return getSliderTestValue(type, field);
     case FieldType.Rating: {
       const max = field.ratingMax ?? 5;
       const precision = field.ratingPrecision ?? 1;
@@ -380,11 +441,7 @@ const getTestValue = async (
     case FieldType.KeyValueSelect:
       return getSelectableKeyValue(field);
     case FieldType.Address:
-      try {
-        return await getAddressTestValue(field, identity);
-      } catch {
-        return SKIP;
-      }
+      return getSafeAddressTestValue(field, identity);
     default:
       // Keep custom text-like controls useful when they introduce a new field type.
       return getTextValue(field, identity);

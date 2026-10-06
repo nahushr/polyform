@@ -24,7 +24,7 @@ export interface ColorPickerInputProps extends Omit<
 
 const colorToHex = (color: string | null | undefined): string => {
   const value = color?.trim() ?? "";
-  const hex = value.match(/^#([\da-f]{3}|[\da-f]{6}|[\da-f]{8})$/i)?.[1];
+  const hex = /^#([\da-f]{3}|[\da-f]{6}|[\da-f]{8})$/i.exec(value)?.[1];
   if (hex) {
     const normalized = hex.length === 3
       ? hex.split("").map((character) => character + character).join("")
@@ -32,7 +32,7 @@ const colorToHex = (color: string | null | undefined): string => {
     return `#${normalized}`;
   }
 
-  const rgb = value.match(/^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+  const rgb = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i.exec(value);
   if (rgb) {
     const channels = rgb.slice(1, 4).map((channel) =>
       Math.min(255, Number(channel)).toString(16).padStart(2, "0"),

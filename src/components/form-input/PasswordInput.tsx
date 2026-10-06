@@ -75,23 +75,18 @@ const PasswordInput = forwardRef<HTMLDivElement, PasswordInputProps>(
         }}
         InputProps={{
           disableUnderline: true,
-          endAdornment: (() => {
-            if (showPasswordToggle) {
-              return (
-                <AppInputAdornment position="end">
-                  <AppIconButton data-test-id="src-components-form-input-passwordinput-action-82"
-                    aria-label="toggle password visibility"
-                    onClick={handleTogglePassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </AppIconButton>
-                </AppInputAdornment>
-              );
-            }
-            return undefined;
-          })(),
+          endAdornment: showPasswordToggle ? (
+            <AppInputAdornment position="end">
+              <AppIconButton data-test-id="src-components-form-input-passwordinput-action-82"
+                aria-label="toggle password visibility"
+                onClick={handleTogglePassword}
+                onMouseDown={handleMouseDownPassword}
+                edge="end"
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </AppIconButton>
+            </AppInputAdornment>
+          ) : undefined,
         }}
         {...props}
       />

@@ -113,19 +113,15 @@ const ImageSlotsUpload = ({
     [updateSlot],
   );
 
-  const visibleSlotIndexes = canEdit
-    ? showEmptySlots
-      ? normalizedValues.map((_, index) => index)
-      : [
-          ...activeSlotIndexes,
-          ...(() => {
-            const firstEmptyIndex = normalizedValues.findIndex(
-              (value) => !value,
-            );
-            return firstEmptyIndex >= 0 ? [firstEmptyIndex] : [];
-          })(),
-        ]
-    : activeSlotIndexes;
+  let visibleSlotIndexes = activeSlotIndexes;
+  if (canEdit && showEmptySlots) {
+    visibleSlotIndexes = normalizedValues.map((_, index) => index);
+  } else if (canEdit) {
+    const firstEmptyIndex = normalizedValues.findIndex((value) => !value);
+    if (firstEmptyIndex >= 0) {
+      visibleSlotIndexes = [...activeSlotIndexes, firstEmptyIndex];
+    }
+  }
   const visibleSlots = visibleSlotIndexes.map((index) => ({
     value: normalizedValues[index],
     index,
@@ -223,7 +219,7 @@ const ImageSlotsUpload = ({
                       startIcon={<CloudUploadIcon />}
                       className={styles["image-slots-upload__add-button"]}
                     >
-                      Add
+                      <span>Add</span>
                       <input
                         id={`${inputIdPrefix}-${index}`}
                         hidden

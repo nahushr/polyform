@@ -4,8 +4,8 @@ import "./DevicePreview.scss";
 type PreviewMode = "desktop" | "phone";
 
 interface DevicePreviewProps {
-  children: ReactNode;
-  label: string;
+  readonly children: ReactNode;
+  readonly label: string;
 }
 
 export function DevicePreview({ children, label }: DevicePreviewProps): JSX.Element {
@@ -21,7 +21,8 @@ export function DevicePreview({ children, label }: DevicePreviewProps): JSX.Elem
             {isPhonePreview ? "Phone-sized responsive view" : "Full-width desktop view"}
           </span>
         </div>
-        <div className="device-preview__toggle" aria-label="Preview size" role="group">
+        <fieldset className="device-preview__toggle">
+          <legend className="device-preview__toggle-label">Preview size</legend>
           <button
             aria-pressed={!isPhonePreview}
             className={!isPhonePreview ? "selected" : ""}
@@ -40,7 +41,7 @@ export function DevicePreview({ children, label }: DevicePreviewProps): JSX.Elem
             <span aria-hidden="true" className="device-preview__icon device-preview__icon--phone" />
             Phone
           </button>
-        </div>
+        </fieldset>
       </div>
 
       <div
@@ -48,8 +49,8 @@ export function DevicePreview({ children, label }: DevicePreviewProps): JSX.Elem
       >
         {isPhonePreview && (
           <div className="device-preview__status" aria-hidden="true">
-            <span>9:41</span>
-            <span className="device-preview__notch" />
+            <span>9:41</span>{" "}
+            <span className="device-preview__notch" />{" "}
             <span className="device-preview__status-icons">••• ▰</span>
           </div>
         )}

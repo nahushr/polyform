@@ -1,3 +1,5 @@
+import { useId, useRef } from "react";
+
 import {
   AppBox,
   AppButton,
@@ -40,6 +42,14 @@ const KeyValueInput = ({
   valuePlaceholder = "Value",
   addButtonLabel = "Add pair",
 }: KeyValueInputProps): JSX.Element => {
+  const idPrefix = useId();
+  const nextId = useRef(0);
+  const rowIds = useRef<string[]>([]);
+  while (rowIds.current.length < value.length) {
+    rowIds.current.push(`${idPrefix}-row-${nextId.current++}`);
+  }
+  if (rowIds.current.length > value.length) rowIds.current.length = value.length;
+
   const updateEntry = (
     index: number,
     property: keyof KeyValueEntry,
@@ -52,8 +62,15 @@ const KeyValueInput = ({
     );
   };
 
-  const removeEntry = (index: number): void =>
+  const removeEntry = (index: number): void => {
+    rowIds.current.splice(index, 1);
     onChange(value.filter((_entry, entryIndex) => entryIndex !== index));
+  };
+
+  const addEntry = (): void => {
+    rowIds.current.push(`${idPrefix}-row-${nextId.current++}`);
+    onChange([...value, { key: "", value: "" }]);
+  };
 
   return (
     <AppBox className={styles.root}>
@@ -71,7 +88,7 @@ const KeyValueInput = ({
           <AppBox role="columnheader" aria-label="Actions" />
         </AppBox>
         {value.map((entry, index) => (
-          <AppBox role="row" key={index} className={styles.row}>
+          <AppBox role="row" key={rowIds.current[index]} className={styles.row}>
             <TextFieldInput
               fullWidth
               value={entry.key}
@@ -106,7 +123,7 @@ const KeyValueInput = ({
         variant="outlined"
         size="small"
         disabled={disabled}
-        onClick={() => onChange([...value, { key: "", value: "" }])}
+        onClick={addEntry}
         className={styles.addButton}
       >
         {addButtonLabel}

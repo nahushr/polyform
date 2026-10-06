@@ -4,7 +4,6 @@ interface ImageUploadInputProps {
   value: string;
   onChange: (base64: string) => void;
   disabled?: boolean;
-  size?: number;
   label?: string;
   required?: boolean;
   accept?: string;

@@ -1,6 +1,7 @@
 import {
   createContext,
   forwardRef,
+  useMemo,
   useContext,
   useState,
   type ComponentType,
@@ -102,6 +103,28 @@ const RangeCalendarDay = forwardRef<
 
 RangeCalendarDay.displayName = "RangeCalendarDay";
 
+const formatRangeInput = (
+  start: Date | null,
+  end: Date | null,
+  formatValue: (date: Date | null) => string,
+): string => {
+  if (!start) return "";
+  const startText = formatValue(start);
+  if (!end) return `${startText} – Select end date`;
+  return `${startText} – ${formatValue(end)}`;
+};
+
+const formatRangeSummary = (
+  start: Date | null,
+  end: Date | null,
+  formatValue: (date: Date | null) => string,
+): string => {
+  if (!start) return "No dates selected";
+  const startText = formatValue(start);
+  if (!end) return `${startText} – …`;
+  return `${startText} – ${formatValue(end)}`;
+};
+
 const DateRangePickerInput = ({
   value,
   onChange,
@@ -123,10 +146,12 @@ const DateRangePickerInput = ({
   const formatValue = (date: Date | null): string =>
     date && isValid(date) ? formatDate(date, format) : "";
 
-  const displayValue = start
-    ? `${formatValue(start)} – ${end ? formatValue(end) : "Select end date"}`
-    : "";
-  const calendarDate = selectingEnd ? start : end ?? start;
+  const displayValue = formatRangeInput(start, end, formatValue);
+  const calendarDate = useMemo(() => {
+    if (selectingEnd) return start;
+    return end ?? start;
+  }, [end, selectingEnd, start]);
+  const contextValue = useMemo(() => ({ start, end }), [end, start]);
 
   const openPicker = (
     event: MouseEvent<HTMLDivElement>,
@@ -205,7 +230,7 @@ const DateRangePickerInput = ({
               {selectingEnd ? "Select an end date" : "Select a start date"}
             </AppTypography>
           </AppBox>
-          <DateRangeContext.Provider value={{ start, end }}>
+          <DateRangeContext.Provider value={contextValue}>
             <AppDateCalendar
               value={calendarDate}
               onChange={handleCalendarChange}
@@ -229,9 +254,7 @@ const DateRangePickerInput = ({
               Clear range
             </AppButton>
             <AppTypography variant="caption" className={styles.rangeSummary}>
-              {start
-                ? `${formatValue(start)}${end ? ` – ${formatValue(end)}` : " – …"}`
-                : "No dates selected"}
+              {formatRangeSummary(start, end, formatValue)}
             </AppTypography>
           </AppBox>
         </AppPopover>

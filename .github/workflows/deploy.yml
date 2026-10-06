@@ -94,6 +94,34 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+      - name: Fail when SonarCloud has any unresolved issue
+        if: env.HAS_SONAR_TOKEN == 'true'
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          query_scope=(
+            --data-urlencode "componentKeys=nahushr_polyform"
+            --data-urlencode "statuses=OPEN,CONFIRMED,REOPENED"
+            --data-urlencode "ps=1"
+          )
+          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
+            query_scope+=(--data-urlencode "pullRequest=$PR_NUMBER")
+          elif [[ "$GITHUB_REF_NAME" != "main" ]]; then
+            query_scope+=(--data-urlencode "branch=$GITHUB_REF_NAME")
+          fi
+          response="$(curl --fail --silent --show-error \
+            --user "$SONAR_TOKEN:" \
+            --get \
+            "${query_scope[@]}" \
+            https://sonarcloud.io/api/issues/search)"
+          issue_count="$(jq -er '.total | numbers' <<< "$response")"
+          if [[ "$issue_count" -ne 0 ]]; then
+            echo "::error::SonarCloud reports $issue_count unresolved issue(s). Resolve every issue before merging: https://sonarcloud.io/project/issues?id=nahushr_polyform"
+            exit 1
+          fi
+          echo "SonarCloud reports zero unresolved issues."
+
       - name: Fail when SonarCloud secret is missing
         if: env.HAS_SONAR_TOKEN != 'true'
         run: echo "::error::SonarCloud analysis cannot run because SONAR_TOKEN is not configured." && exit 1

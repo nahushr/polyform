@@ -22,8 +22,8 @@ export interface TextFieldInputProps extends Omit<
  */
 const formatNumberWithCommas = (value: number | string): string => {
   const numValue =
-    typeof value === "string" ? parseFloat(value.replace(/,/g, "")) : value;
-  if (isNaN(numValue)) return "";
+    typeof value === "string" ? Number.parseFloat(value.replace(/,/g, "")) : value;
+  if (Number.isNaN(numValue)) return "";
   // Format with Indian locale (en-IN) which uses commas for thousands
   return numValue.toLocaleString("en-IN", {
     minimumFractionDigits: 0,
@@ -36,7 +36,45 @@ const formatNumberWithCommas = (value: number | string): string => {
  */
 const parseNumberFromFormatted = (value: string): number => {
   const cleaned = value.replace(/,/g, "");
-  return parseFloat(cleaned) || 0;
+  return Number.parseFloat(cleaned) || 0;
+};
+
+const emitFormattedChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  value: string,
+  onChange?: TextFieldInputProps["onChange"],
+): void => {
+  if (!onChange) return;
+  const syntheticEvent = {
+    ...event,
+    target: { ...event.target, value },
+  } as React.ChangeEvent<HTMLInputElement>;
+  onChange(syntheticEvent);
+};
+
+const handleFormattedNumberChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  setFormattedValue: (value: string) => void,
+  onChange?: TextFieldInputProps["onChange"],
+): void => {
+  const inputValue = event.target.value;
+  if (!inputValue) {
+    setFormattedValue("");
+    emitFormattedChange(event, "", onChange);
+    return;
+  }
+
+  const endsWithDecimal = inputValue.endsWith(".");
+  const parsed = Number.parseFloat(inputValue.replace(/,/g, ""));
+  if (Number.isFinite(parsed) && parsed >= 0) {
+    const formatted = formatNumberWithCommas(parsed);
+    setFormattedValue(endsWithDecimal ? `${formatted}.` : formatted);
+    emitFormattedChange(event, parsed.toString(), onChange);
+    return;
+  }
+
+  setFormattedValue(inputValue);
+  onChange?.(event);
 };
 
 /**
@@ -66,8 +104,7 @@ const TextFieldInput = forwardRef<HTMLDivElement, TextFieldInputProps>(
     ref,
   ) => {
     // Determine if number formatting should be enabled
-    const shouldFormatNumber =
-      formatNumberProp !== undefined ? formatNumberProp : type === "number";
+    const shouldFormatNumber = formatNumberProp ?? type === "number";
 
     // Internal state for formatted value (only used when formatting is enabled)
     const [formattedValue, setFormattedValue] = useState<string>(
@@ -88,57 +125,8 @@ const TextFieldInput = forwardRef<HTMLDivElement, TextFieldInputProps>(
 
     // Handle change event with number formatting
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-      const inputValue = e.target.value;
-
-      if (shouldFormatNumber) {
-        // Allow empty input
-        if (inputValue === "") {
-          setFormattedValue("");
-          // Call onChange with empty string or 0
-          if (onChange) {
-            const syntheticEvent = {
-              ...e,
-              target: { ...e.target, value: "" },
-            } as React.ChangeEvent<HTMLInputElement>;
-            onChange(syntheticEvent);
-          }
-          return;
-        }
-
-        // Check if user is typing a decimal (ends with .)
-        const endsWithDecimal = inputValue.endsWith(".");
-
-        // Remove commas and parse
-        const cleaned = inputValue.replace(/,/g, "");
-        const parsed = parseFloat(cleaned);
-
-        // If valid number, format and update
-        if (!isNaN(parsed) && parsed >= 0) {
-          const formatted = formatNumberWithCommas(parsed);
-          setFormattedValue(endsWithDecimal ? `${formatted}.` : formatted);
-
-          // Call onChange with the numeric value (without commas)
-          if (onChange) {
-            const syntheticEvent = {
-              ...e,
-              target: { ...e.target, value: parsed.toString() },
-            } as React.ChangeEvent<HTMLInputElement>;
-            onChange(syntheticEvent);
-          }
-        } else {
-          // If invalid (user might be typing), just store the raw input
-          setFormattedValue(inputValue);
-          // Still call onChange with the raw value
-          if (onChange) {
-            onChange(e);
-          }
-        }
-      } else {
-        // No formatting, just pass through
-        if (onChange) {
-          onChange(e);
-        }
-      }
+      if (!shouldFormatNumber) return onChange?.(e);
+      handleFormattedNumberChange(e, setFormattedValue, onChange);
     };
 
     // Handle blur event with number formatting
@@ -156,12 +144,7 @@ const TextFieldInput = forwardRef<HTMLDivElement, TextFieldInputProps>(
           } as React.FocusEvent<HTMLInputElement>;
           onBlur(syntheticEvent);
         }
-      } else {
-        // No formatting, just pass through
-        if (onBlur) {
-          onBlur(e);
-        }
-      }
+      } else onBlur?.(e);
     };
 
     // Use "text" type when formatting numbers (number inputs don't support formatting)

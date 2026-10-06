@@ -67,6 +67,12 @@ const isCreateOption = (
   option: SelectableLabel,
 ): option is CreateLeadLabelOption => "kind" in option;
 
+const getColorChoiceClassName = (colorKey: string, selected: boolean): string => {
+  const colorClass = styles[`label-color-${colorKey}`] ?? "";
+  const selectedClass = selected ? styles.colorChoiceSelected : "";
+  return [styles.colorChoice, colorClass, selectedClass].filter(Boolean).join(" ");
+};
+
 const parseHexColor = (color: string): [number, number, number] | undefined => {
   const normalized = color.trim().replace(/^#/, "");
   const expanded = normalized.length === 3
@@ -127,7 +133,12 @@ const LeadLabels = ({
   const handleChange = (_event: React.SyntheticEvent, selected: SelectableLabel[]): void => {
     const createOption = selected.find(isCreateOption);
     if (createOption) {
-      setNewLabelName(createOption.name.replace(/^Create \"|\"$/g, ""));
+      const prefix = 'Create "';
+      const optionName = createOption.name;
+      const labelName = optionName.startsWith(prefix) && optionName.endsWith('"')
+        ? optionName.slice(prefix.length, -1)
+        : optionName;
+      setNewLabelName(labelName);
       setCreateDialogOpen(true);
       return;
     }
@@ -311,7 +322,10 @@ const LeadLabels = ({
                 role="radio"
                 aria-checked={newLabelColorKey === color.key}
                 aria-label={`${color.key} label color`}
-                className={`${styles.colorChoice} ${styles[`label-color-${color.key}`]} ${newLabelColorKey === color.key ? styles.colorChoiceSelected : ""}`}
+                className={getColorChoiceClassName(
+                  color.key,
+                  newLabelColorKey === color.key,
+                )}
                 onClick={() => setNewLabelColorKey(color.key)}
               >
                 {newLabelColorKey === color.key && (

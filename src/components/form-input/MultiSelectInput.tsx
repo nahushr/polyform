@@ -36,9 +36,7 @@ const MultiSelectInput = ({
   helperText,
   sortOptions = false,
 }: MultiSelectInputProps): JSX.Element => {
-  const selectedOptions = options.filter((option) =>
-    value.some((selected) => selected === option.value),
-  );
+  const selectedOptions = options.filter((option) => value.includes(option.value));
   const availableOptions = sortOptions
     ? [...options].sort((left, right) => left.label.localeCompare(right.label))
     : options;

@@ -1,6 +1,8 @@
 import {
+  createContext,
   forwardRef,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -118,6 +120,57 @@ export interface LazyAutocompleteInputProps extends Omit<
    */
   placeholder?: string;
 }
+
+interface LazyListboxContextValue {
+  listboxRef: React.MutableRefObject<HTMLUListElement | null>;
+  handleScroll: React.UIEventHandler<HTMLUListElement>;
+  maxHeight: number;
+  loadingMore: boolean;
+  hasMore: boolean;
+  optionCount: number;
+}
+
+const LazyListboxContext = createContext<LazyListboxContextValue | null>(null);
+
+const LazyLoadingListbox = forwardRef<
+  HTMLUListElement,
+  React.HTMLAttributes<HTMLUListElement>
+>(function LazyLoadingListbox(listboxProps, forwardedRef) {
+  const settings = useContext(LazyListboxContext);
+  if (!settings) return <ul {...listboxProps} ref={forwardedRef} />;
+
+  const setRefs = (node: HTMLUListElement | null): void => {
+    if (typeof forwardedRef === "function") forwardedRef(node);
+    else if (forwardedRef) forwardedRef.current = node;
+    settings.listboxRef.current = node;
+  };
+
+  const className = [
+    listboxProps.className,
+    styles["lazy-autocomplete__listbox"],
+    getListboxSizeClass(settings.maxHeight),
+  ].filter(Boolean).join(" ");
+
+  return (
+    <AppBox component="div" className={styles["lazy-autocomplete__container"]}>
+      <ul
+        {...listboxProps}
+        ref={setRefs}
+        className={className}
+        onScroll={settings.handleScroll}
+      />
+      {!settings.loadingMore && settings.hasMore && settings.optionCount > 0 && (
+        <AppBox className={styles["lazy-autocomplete__hint"]}>
+          <SecondaryFont className={styles["lazy-autocomplete__hint-text"]}>
+            Scroll for more results...
+          </SecondaryFont>
+        </AppBox>
+      )}
+    </AppBox>
+  );
+});
+
+LazyLoadingListbox.displayName = "LazyLoadingListbox";
 
 const getListboxSizeClass = (maxHeight: number): string => {
   if (maxHeight <= 200) return styles["lazy-autocomplete__listbox-short"];
@@ -388,50 +441,20 @@ const LazyAutocompleteInput = forwardRef<
       }
     }, [value, options, selectedOption]);
 
-    /**
-     * Custom ListboxComponent that includes loading indicator at bottom
-     */
-    const ListboxComponent = useMemo(
-      () =>
-        forwardRef<HTMLUListElement, React.HTMLAttributes<HTMLUListElement>>(
-          function ListboxWithLoading(listboxProps, listboxRefProp) {
-            return (
-              <AppBox
-                component="div"
-                className={styles["lazy-autocomplete__container"]}
-              >
-                <ul
-                  {...listboxProps}
-                  ref={(node) => {
-                    // Handle both refs
-                    if (typeof listboxRefProp === "function") {
-                      listboxRefProp(node);
-                    } else if (listboxRefProp) {
-                      listboxRefProp.current = node;
-                    }
-                    listboxRef.current = node;
-                  }}
-                  className={`${listboxProps.className || ""} ${styles["lazy-autocomplete__listbox"]} ${getListboxSizeClass(maxHeight)}`.trim()}
-                  onScroll={handleScroll}
-                />
-                {/* Show "Scroll for more" hint when there are more results */}
-                {!loadingMore && hasMore && options.length > 0 && (
-                  <AppBox className={styles["lazy-autocomplete__hint"]}>
-                    <SecondaryFont
-                      className={styles["lazy-autocomplete__hint-text"]}
-                    >
-                      Scroll for more results...
-                    </SecondaryFont>
-                  </AppBox>
-                )}
-              </AppBox>
-            );
-          },
-        ),
-      [maxHeight, handleScroll, loadingMore, hasMore, options.length],
+    const listboxSettings = useMemo<LazyListboxContextValue>(
+      () => ({
+        listboxRef,
+        handleScroll,
+        maxHeight,
+        loadingMore,
+        hasMore,
+        optionCount: options.length,
+      }),
+      [handleScroll, hasMore, loadingMore, maxHeight, options.length],
     );
 
     return (
+      <LazyListboxContext.Provider value={listboxSettings}>
       <AppAutocomplete
         ref={ref}
         open={open}
@@ -449,7 +472,7 @@ const LazyAutocompleteInput = forwardRef<
           option.value === val.value
         }
         filterOptions={(x) => x} // Disable client-side filtering (server handles it)
-        ListboxComponent={ListboxComponent}
+        ListboxComponent={LazyLoadingListbox}
         renderInput={(params: AutocompleteRenderInputParams) => (
           <AppTextField
             {...params}
@@ -472,6 +495,7 @@ const LazyAutocompleteInput = forwardRef<
         )}
         {...props}
       />
+      </LazyListboxContext.Provider>
     );
   },
 );

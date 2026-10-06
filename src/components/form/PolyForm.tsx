@@ -144,7 +144,6 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   placeholder?: string;
   maxLength?: number;
   // For image upload fields
-  imageSize?: number;
   maxSizeMB?: number;
   maxFiles?: number;
   accept?: string;
@@ -211,7 +210,7 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   // Content rendered beside the standard field (for example, a field action)
   endContent?: ReactNode;
   /** Optional test value factory for custom fields used by the test-fill button. */
-  testValue?: () => unknown | Promise<unknown>;
+  testValue?: () => unknown;
 }
 
 /**
@@ -230,6 +229,8 @@ export interface SectionConfig<TFieldValues extends FieldValues = FieldValues> {
 }
 
 export interface FormCardConfig<TFieldValues extends FieldValues = FieldValues> {
+  /** Stable identifier used as the React key when card content is duplicated. */
+  id?: string;
   header?: ReactNode;
   subtitle?: ReactNode;
   sections: Array<SectionConfig<TFieldValues>>;
@@ -370,7 +371,6 @@ export const PolyForm = <
       rows = 4,
       placeholder,
       maxLength,
-      imageSize = 150,
       maxSizeMB = 5,
       maxFiles = 10,
       accept,
@@ -534,8 +534,9 @@ export const PolyForm = <
                   ? modifyFieldProps(field)
                   : field;
 
-                // Email field
-                if (type === FieldType.Email) {
+                switch (type) {
+                  // Email field
+                  case FieldType.Email: {
                   return (
                     <EmailInput
                       {...fieldProps}
@@ -547,10 +548,10 @@ export const PolyForm = <
                       placeholder={placeholder}
                     />
                   );
-                }
+                  }
 
-                // Phone field
-                if (type === FieldType.Phone) {
+                  // Phone field
+                  case FieldType.Phone: {
                   return (
                     <PhoneInput
                       {...fieldProps}
@@ -562,10 +563,10 @@ export const PolyForm = <
                       placeholder={placeholder}
                     />
                   );
-                }
+                  }
 
-                // Select field
-                if (type === FieldType.Select) {
+                  // Select field
+                  case FieldType.Select: {
                   return (
                     <SelectInput
                       {...fieldProps}
@@ -578,10 +579,10 @@ export const PolyForm = <
                       placeholder={placeholder}
                     />
                   );
-                }
+                  }
 
-                // Currency field with flag, symbol, and compact popover
-                if (type === FieldType.Currency) {
+                  // Currency field with flag, symbol, and compact popover
+                  case FieldType.Currency: {
                   return (
                     <CurrencyInput
                       {...fieldProps}
@@ -593,9 +594,9 @@ export const PolyForm = <
                       options={currencyOptions}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.Color) {
+                  case FieldType.Color: {
                   return (
                     <ColorPickerInput
                       value={fieldProps.value as string | null | undefined}
@@ -607,10 +608,10 @@ export const PolyForm = <
                       required={required}
                     />
                   );
-                }
+                  }
 
-                // Autocomplete/Dropdown field
-                if (type === FieldType.Autocomplete) {
+                  // Autocomplete/Dropdown field
+                  case FieldType.Autocomplete: {
                   return (
                     <AutocompleteInput
                       {...fieldProps}
@@ -625,10 +626,10 @@ export const PolyForm = <
                       placeholder={placeholder}
                     />
                   );
-                }
+                  }
 
-                // Lazy Autocomplete field (server-side search with pagination)
-                if (type === FieldType.LazyAutocomplete) {
+                  // Lazy Autocomplete field (server-side search with pagination)
+                  case FieldType.LazyAutocomplete: {
                   if (!fetchOptions) {
                     throw new Error(
                       "LazyAutocomplete fields require fetchOptions to be provided in the field configuration.",
@@ -658,10 +659,10 @@ export const PolyForm = <
                       placeholder={placeholder}
                     />
                   );
-                }
+                  }
 
-                // Date field (modern DatePicker using @/components/material-ui-component-wrappers/date-time)
-                if (type === FieldType.Date) {
+                  // Date field
+                  case FieldType.Date: {
                   return (
                     <DatePickerInput
                       value={
@@ -695,9 +696,9 @@ export const PolyForm = <
                       placeholder={placeholder}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.DateRange) {
+                  case FieldType.DateRange: {
                   return (
                     <DateRangePickerInput
                       value={fieldProps.value as DateRangeValue | null | undefined}
@@ -712,9 +713,9 @@ export const PolyForm = <
                       format={dateFormat ?? "MM/dd/yyyy"}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.Time) {
+                  case FieldType.Time: {
                   return (
                     <TimePickerInput
                       value={fieldProps.value as Date | null | undefined}
@@ -731,10 +732,10 @@ export const PolyForm = <
                       minutesStep={minutesStep}
                     />
                   );
-                }
+                  }
 
-                // DateTime field with optional timezone
-                if (type === FieldType.DateTime) {
+                  // DateTime field with optional timezone
+                  case FieldType.DateTime: {
                   const currentValue = fieldProps.value as DateTimeValue | null;
                   return (
                     <DateTimePickerInput
@@ -754,10 +755,10 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                // Image Upload field
-                if (type === FieldType.Image) {
+                  // Image Upload field
+                  case FieldType.Image: {
                   return (
                     <ImageUploadInput
                       value={fieldProps.value as string}
@@ -768,16 +769,15 @@ export const PolyForm = <
                         }
                       }}
                       disabled={isFieldDisabled}
-                      size={imageSize}
                       label={label}
                       required={required}
                       maxSizeMB={maxSizeMB}
                     />
                   );
-                }
+                  }
 
-                // Multiple images with previews and per-image removal
-                if (type === FieldType.MultipleImage) {
+                  // Multiple images with previews and per-image removal
+                  case FieldType.MultipleImage: {
                   return (
                     <MultipleImageUploadInput
                       value={
@@ -791,10 +791,10 @@ export const PolyForm = <
                       label={label}
                     />
                   );
-                }
+                  }
 
-                // Multiple files with per-file removal
-                if (type === FieldType.MultipleFile) {
+                  // Multiple files with per-file removal
+                  case FieldType.MultipleFile: {
                   return (
                     <MultipleFileUploadInput
                       value={(fieldProps.value as File[]) ?? []}
@@ -809,10 +809,10 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                // Code field with a selectable syntax grammar
-                if (type === FieldType.Code) {
+                  // Code field with a selectable syntax grammar
+                  case FieldType.Code: {
                   return (
                     <Suspense
                       fallback={
@@ -835,9 +835,9 @@ export const PolyForm = <
                       />
                     </Suspense>
                   );
-                }
+                  }
 
-                if (type === FieldType.Checkbox) {
+                  case FieldType.Checkbox: {
                   return (
                     <CheckboxInput
                       label={label}
@@ -848,9 +848,9 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.MultiCheckbox) {
+                  case FieldType.MultiCheckbox: {
                   return (
                     <CheckboxGroupInput
                       label={label}
@@ -866,9 +866,9 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.Radio) {
+                  case FieldType.Radio: {
                   return (
                     <AppFormControlLabel
                       control={
@@ -884,9 +884,9 @@ export const PolyForm = <
                       label={label}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.RadioGroup) {
+                  case FieldType.RadioGroup: {
                   return (
                     <AppBox className={styles["choice-field"]}>
                       {label && (
@@ -908,9 +908,9 @@ export const PolyForm = <
                       )}
                     </AppBox>
                   );
-                }
+                  }
 
-                if (type === FieldType.MultiSelect) {
+                  case FieldType.MultiSelect: {
                   return (
                     <MultiSelectInput
                       options={options}
@@ -926,12 +926,10 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                if (
-                  type === FieldType.Slider ||
-                  type === FieldType.RangeSlider
-                ) {
+                  case FieldType.Slider:
+                  case FieldType.RangeSlider: {
                   return (
                     <SliderInput
                       label={label}
@@ -960,9 +958,9 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.Rating) {
+                  case FieldType.Rating: {
                   return (
                     <RatingInput
                       label={label}
@@ -976,9 +974,9 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.EmojiText) {
+                  case FieldType.EmojiText: {
                   return (
                     <EmojiTextInput
                       label={label}
@@ -992,9 +990,9 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.KeyValue) {
+                  case FieldType.KeyValue: {
                   return (
                     <KeyValueInput
                       label={label}
@@ -1009,9 +1007,9 @@ export const PolyForm = <
                       addButtonLabel={addButtonLabel}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.KeyValueSelect) {
+                  case FieldType.KeyValueSelect: {
                   return (
                     <KeyValueSelectInput
                       label={label}
@@ -1029,9 +1027,9 @@ export const PolyForm = <
                       addButtonLabel={addButtonLabel}
                     />
                   );
-                }
+                  }
 
-                if (type === FieldType.LeadLabels) {
+                  case FieldType.LeadLabels: {
                   return (
                     <LeadLabels
                       value={(fieldProps.value as LeadLabelOption[]) ?? []}
@@ -1045,10 +1043,10 @@ export const PolyForm = <
                       helperText={fieldError?.message}
                     />
                   );
-                }
+                  }
 
-                // Password field (with show/hide toggle)
-                if (type === FieldType.Password) {
+                  // Password field (with show/hide toggle)
+                  case FieldType.Password: {
                   return (
                     <PasswordInput
                       {...fieldProps}
@@ -1061,10 +1059,10 @@ export const PolyForm = <
                       autocomplete={autocomplete}
                     />
                   );
-                }
+                  }
 
-                // Switch field (boolean toggle)
-                if (type === FieldType.Switch) {
+                  // Switch field (boolean toggle)
+                  case FieldType.Switch: {
                   return (
                     <AppBox className={styles["switch-field"]}>
                       <AppFormControlLabel
@@ -1085,10 +1083,10 @@ export const PolyForm = <
                       />
                     </AppBox>
                   );
-                }
+                  }
 
-                // RichText field (rich text editor)
-                if (type === FieldType.RichText) {
+                  // RichText field (rich text editor)
+                  case FieldType.RichText: {
                   return (
                     <Suspense
                       fallback={<AppBox className={styles["field-loading"]} role="status" />}
@@ -1105,10 +1103,10 @@ export const PolyForm = <
                       />
                     </Suspense>
                   );
-                }
+                  }
 
-                // Textarea field (multi-line)
-                if (type === FieldType.Textarea) {
+                  // Textarea field (multi-line)
+                  case FieldType.Textarea: {
                   return (
                     <TextFieldInput
                       {...fieldProps}
@@ -1123,25 +1121,16 @@ export const PolyForm = <
                       maxLength={maxLength}
                     />
                   );
-                }
-
-                // Default: Text, Number fields
-                // Ensure value is never undefined to prevent uncontrolled->controlled warning
-                const isNumberField = type === FieldType.Number;
-                // For number fields, show empty string when value is 0, undefined, or null
-                // This allows users to clear and replace the value instead of appending to 0
-                const displayValue = (() => {
-                  if (isNumberField) {
-                    return (() => {
-                      if (fieldProps.value === 0 || fieldProps.value == null) {
-                        return "";
-                      }
-                      return fieldProps.value;
-                    })();
                   }
-                  return fieldProps.value ?? "";
-                })();
-                return (
+
+                  // Default: Text and Number fields.
+                  default: {
+                    const isNumberField = type === FieldType.Number;
+                    const displayValue = isNumberField &&
+                      (fieldProps.value === 0 || fieldProps.value == null)
+                      ? ""
+                      : fieldProps.value ?? "";
+                    return (
                   <TextFieldInput
                     {...fieldProps}
                     value={displayValue}
@@ -1151,7 +1140,7 @@ export const PolyForm = <
                       if (isNumberField) {
                         // Convert to number for number fields, or 0 if empty
                         const numVal = val === "" ? 0 : Number(val);
-                        fieldProps.onChange(isNaN(numVal) ? 0 : numVal);
+                        fieldProps.onChange(Number.isNaN(numVal) ? 0 : numVal);
                       } else {
                         fieldProps.onChange(val);
                       }
@@ -1164,7 +1153,9 @@ export const PolyForm = <
                     helperText={fieldError?.message}
                     placeholder={placeholder}
                   />
-                );
+                    );
+                  }
+                }
               }}
             />
           </AppBox>
@@ -1187,7 +1178,9 @@ export const PolyForm = <
       {cards.map((card, cardIndex) => (
         <AppPaper
           component="section"
-          key={`polyform-card-${cardIndex}`}
+          key={card.id ?? card.sections
+            .flatMap((section) => section.fields.map((field) => String(field.name)))
+            .join("|")}
           className={joinClassNames(
             styles["form-card"],
             classNames.card,
