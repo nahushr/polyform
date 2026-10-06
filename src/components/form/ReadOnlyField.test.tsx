@@ -99,7 +99,7 @@ describe("ReadOnlyField", () => {
   });
 
   it("formats dates, date ranges, date-times, and times", () => {
-    const date = new Date("2026-04-15T12:00:00.000Z");
+    const date = new Date(2026, 3, 15, 8, 0);
     expect(renderField(FieldType.Date, date, { dateFormat: "yyyy-MM-dd" }))
       .toContain("2026-04-15");
     expect(renderField(FieldType.Date, "invalid date")).toContain("invalid date");
