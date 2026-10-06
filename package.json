@@ -30,6 +30,7 @@
   ],
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json",
+    "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "prepublishOnly": "npm run build",
     "dev:example": "npm run dev --workspace polyform-vite-demo",
