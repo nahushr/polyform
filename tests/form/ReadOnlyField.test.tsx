@@ -56,7 +56,7 @@ describe("ReadOnlyField", () => {
   });
 
   it("renders missing values and generic text safely", () => {
-    expect(renderField(FieldType.Text, "  ")).toContain("Not provided");
+    expect(renderField(FieldType.Text, "  ")).toContain("—");
     expect(renderField(FieldType.Text, "  Hello PolyForm  ")).toContain("Hello PolyForm");
     expect(renderField(FieldType.Text, false)).toContain("No");
     expect(renderField(FieldType.Text, ["one", "two"])).toContain("one");
@@ -108,7 +108,7 @@ describe("ReadOnlyField", () => {
       dateFormat: "yyyy-MM-dd",
     });
     expect(range).toContain("2026-04-15");
-    expect(range).toContain("Not set");
+    expect(range).toContain("—");
 
     const dateTime = renderField(FieldType.DateTime, {
       dateTime: date,
@@ -117,7 +117,7 @@ describe("ReadOnlyField", () => {
     expect(dateTime).toContain("America/New York");
     expect(dateTime).toContain("2026");
 
-    expect(renderField(FieldType.DateTime, {})).toContain("Not set");
+    expect(renderField(FieldType.DateTime, {})).toContain("—");
     expect(renderField(FieldType.Time, date, { timeFormat: "HH:mm" })).toContain("08:00");
   });
 
@@ -183,7 +183,7 @@ describe("ReadOnlyField", () => {
     expect(address).toContain("🇺🇸");
     expect(address).toContain("avery@example.com");
 
-    expect(renderField(FieldType.Address, {})).toContain("Not provided");
+    expect(renderField(FieldType.Address, {})).toContain("—");
   });
 
   it("filters unsafe image sources and describes file attachments", () => {
@@ -195,7 +195,7 @@ describe("ReadOnlyField", () => {
     expect(images).toContain("https://example.com/image.png");
     expect(images).toContain("/assets/team.png");
     expect(images).not.toContain("javascript:");
-    expect(renderField(FieldType.Image, "javascript:alert(1)")).toContain("No images");
+    expect(renderField(FieldType.Image, "javascript:alert(1)")).toContain("—");
 
     const files = renderField(FieldType.MultipleFile, [
       { name: "brief.pdf", type: "application/pdf", size: 2048 },
@@ -251,7 +251,7 @@ describe("ReadOnlyField", () => {
     );
     expect(richText).toContain("Hello world");
     expect(richText).not.toContain("alert");
-    expect(renderField(FieldType.RichText, "<p></p>")).toContain("Not provided");
+    expect(renderField(FieldType.RichText, "<p></p>")).toContain("—");
   });
 
   it("renders unknown array items as chips and object values as readable JSON", () => {

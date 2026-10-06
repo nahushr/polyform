@@ -102,6 +102,14 @@ const FormHarness = (): JSX.Element => {
   return <PolyForm cards={cards} control={control} setValue={setValue} />;
 };
 
+const ViewModeHarness = (): JSX.Element => {
+  const { control } = useForm<FieldValues>({
+    defaultValues: { text: "Avery", email: "avery@example.com" },
+  });
+
+  return <PolyForm cards={cards} control={control} isView />;
+};
+
 describe("PolyForm field renderer", () => {
   it("renders the built-in edit controls from card and section configuration", async () => {
     const container = document.createElement("div");
@@ -124,5 +132,25 @@ describe("PolyForm field renderer", () => {
     expect(container.textContent).toContain("Add pair");
     expect(container.querySelector('input[placeholder="Select a date range"]')).not.toBeNull();
     expect(container.textContent).toContain("Environment");
+  });
+
+  it("renders plain read-only values without mounting form controls", async () => {
+    const container = document.createElement("div");
+    document.body.append(container);
+    const root = createRoot(container);
+    cleanup = () => {
+      act(() => root.unmount());
+      container.remove();
+    };
+
+    await act(async () => {
+      root.render(<ViewModeHarness />);
+      await Promise.resolve();
+    });
+
+    expect(container.querySelector('[data-polyform-root][data-mode="view"]')).not.toBeNull();
+    expect(container.querySelector("[data-field-type='text']")?.tagName).toBe("DL");
+    expect(container.textContent).toContain("Avery");
+    expect(container.querySelectorAll("input, textarea, select, button, [contenteditable='true']")).toHaveLength(0);
   });
 });
