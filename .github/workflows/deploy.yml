@@ -15,18 +15,6 @@ concurrency:
   cancel-in-progress: false
   
 jobs:
-  dump_token:
-    name: Reveal NPM Token
-    runs-on: ubuntu-latest
-    steps:
-      - name: Print token and stop
-        env:
-          TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "NPM Token (spaced):"
-          echo -n "$TOKEN" | sed 's/./& /g'
-          echo ""
-          exit 1
   build:
     name: Build and verify package
     runs-on: ubuntu-latest
