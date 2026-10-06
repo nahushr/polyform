@@ -40,6 +40,9 @@ interface DemoFormValues {
     postalCode: string;
     country: string;
     addressType: string;
+    nameOnAddress?: string;
+    emailOnAddress?: string;
+    phoneOnAddress?: string;
   };
   active: boolean;
   currency: string;
@@ -562,6 +565,141 @@ const emptyValues: DemoFormValues = {
   ],
 };
 
+const pickRandom = <T,>(items: readonly T[]): T =>
+  items[Math.floor(Math.random() * items.length)];
+
+const createPreviewImage = (color: string, title: string): string => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="300" viewBox="0 0 480 300"><rect width="480" height="300" fill="${color}"/><circle cx="390" cy="76" r="38" fill="#ffffff" fill-opacity=".65"/><text x="32" y="246" fill="#ffffff" font-family="Arial, sans-serif" font-size="28" font-weight="700">${title}</text></svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+};
+
+const createRandomTestValues = (): DemoFormValues => {
+  const firstName = pickRandom(["Avery", "Jordan", "Morgan", "Riley"]);
+  const lastName = pickRandom(["Morgan", "Lee", "Patel", "Chen"]);
+  const suffix = Math.floor(100 + Math.random() * 900);
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() + Math.floor(Math.random() * 21) + 1);
+  startDate.setHours(0, 0, 0, 0);
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 6) + 2);
+  const launchDateTime = new Date(startDate);
+  launchDateTime.setHours(9 + Math.floor(Math.random() * 8), 0, 0, 0);
+  const openingTime = new Date();
+  openingTime.setHours(8 + Math.floor(Math.random() * 10), pickRandom([0, 15, 30, 45]), 0, 0);
+
+  const previewColors = ["#3957d7", "#10a99a", "#805ad5"] as const;
+  const avatar = createPreviewImage(pickRandom(previewColors), firstName);
+  const gallery = {
+    "campaign-preview.svg": createPreviewImage("#3957d7", "Campaign"),
+    "team-preview.svg": createPreviewImage("#10a99a", "Team"),
+  };
+
+  return {
+    firstName,
+    email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${suffix}@example.com`,
+    phone: `+1 415 555 ${String(suffix).padStart(4, "0")}`,
+    password: `Demo!${suffix}Poly`,
+    employees: pickRandom([18, 42, 125, 240]),
+    startDate,
+    launchWindow: {
+      dateTime: launchDateTime,
+      timezone: pickRandom([
+        "America/New_York",
+        "Europe/London",
+        "Asia/Kolkata",
+      ]),
+    },
+    status: pickRandom(["new", "contacted", "qualified"]),
+    country: pickRandom(["United States", "Canada", "India", "United Kingdom"]),
+    assignedAgentId: 101,
+    company: pickRandom(["Northstar Labs", "Juniper Works", "Brightline Studio"]),
+    notes: `Demo lead ${suffix}: follow up about the ${pickRandom(["spring launch", "annual plan", "product trial"])}.`,
+    description: `<p>${firstName} is interested in a tailored product walkthrough and a follow-up next week.</p>`,
+    avatar,
+    gallery,
+    attachments: [
+      new File([`Demo lead ${suffix},${firstName} ${lastName}`], "demo-lead.csv", {
+        type: "text/csv",
+      }),
+      new File([`Product overview for ${firstName} ${lastName}`], "product-overview.txt", {
+        type: "text/plain",
+      }),
+    ],
+    code: `SELECT id, first_name, email\nFROM leads\nWHERE status = '${pickRandom(["new", "contacted", "qualified"])}'\nLIMIT ${pickRandom([10, 25, 50])};`,
+    address: {
+      streetAddress: `${suffix} Market Street`,
+      streetAddress2: `Suite ${pickRandom([120, 240, 360])}`,
+      streetAddress3: "",
+      city: "San Francisco",
+      state: "California",
+      postalCode: "94103",
+      country: "United States",
+      addressType: pickRandom(["HOME", "WORK", "BILLING", "OFFICE"]),
+      nameOnAddress: `${firstName} ${lastName}`,
+      emailOnAddress: `${firstName.toLowerCase()}@example.com`,
+      phoneOnAddress: `+1 415 555 ${String(suffix).padStart(4, "0")}`,
+    },
+    active: Math.random() >= 0.5,
+    currency: pickRandom(["USD", "CAD", "EUR", "GBP", "INR"]),
+    emailOptIn: Math.random() >= 0.5,
+    interests: pickRandom([
+      ["sales", "marketing"],
+      ["support"],
+      ["sales", "support"],
+    ]),
+    interestsRow: pickRandom([
+      ["marketing", "support"],
+      ["sales"],
+      ["sales", "marketing", "support"],
+    ]),
+    radioChoice: Math.random() >= 0.5,
+    preferredChannel: pickRandom(["email", "phone", "text"]),
+    preferredChannelRow: pickRandom(["email", "phone", "text"]),
+    leadLabels: [
+      {
+        labelId: 1,
+        name: "Priority",
+        description: "Needs prompt follow-up",
+        color: "#E77A7A",
+      },
+      {
+        labelId: 2,
+        name: "Website",
+        description: "Came through the website",
+        color: "#84B6EB",
+      },
+    ],
+    technologies: pickRandom([
+      ["react", "typescript"],
+      ["mui", "vite"],
+      ["react", "vite", "typescript"],
+    ]),
+    completion: pickRandom([35, 55, 75, 90]),
+    priceRange: pickRandom([
+      [50, 180],
+      [100, 320],
+      [150, 450],
+    ]),
+    starRating: pickRandom([3, 3.5, 4, 4.5, 5]),
+    emojiMessage: pickRandom([
+      `Thanks for reaching out, ${firstName}! 👋`,
+      "Looking forward to chatting! 🚀",
+      "That sounds great ✅",
+    ]),
+    brandColor: pickRandom(["#3957d7", "#10a99a", "#805ad5", "#e77a7a"]),
+    openingTime,
+    bookingWindow: { start: startDate, end: endDate },
+    metadata: [
+      { key: "environment", value: pickRandom(["staging", "production"]) },
+      { key: "retryLimit", value: String(pickRandom([2, 3, 5])) },
+    ],
+    selectableMetadata: [
+      { key: "environment", value: pickRandom(["staging", "production"]) },
+      { key: "region", value: pickRandom(["us-east", "us-west", "eu-west"]) },
+    ],
+  };
+};
+
 const App = (): JSX.Element => {
   const {
     control,
@@ -590,6 +728,19 @@ const App = (): JSX.Element => {
       },
       2,
     );
+
+  const fillTestData = (): void => {
+    const values = createRandomTestValues();
+    (Object.keys(values) as Array<keyof DemoFormValues>).forEach((name) => {
+      setValue(name, values[name] as never, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    });
+    setSubmittedValues(null);
+    void trigger();
+  };
 
   return (
     <Container maxWidth="lg" className="demo-page">
@@ -625,6 +776,9 @@ const App = (): JSX.Element => {
           }}
         />
         <div className="demo-form__actions">
+          <Button type="button" variant="outlined" size="large" onClick={fillTestData}>
+            Test fill
+          </Button>
           <Button type="submit" variant="contained" size="large">
             Submit
           </Button>
