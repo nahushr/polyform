@@ -122,32 +122,6 @@ jobs:
           fi
           echo "SonarCloud reports zero unresolved issues."
 
-      - name: Report SonarCloud new-code coverage by file
-        if: always() && env.HAS_SONAR_TOKEN == 'true'
-        continue-on-error: true
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          coverage_scope=(--data-urlencode "component=nahushr_polyform")
-          if [[ "$GITHUB_EVENT_NAME" == "pull_request" ]]; then
-            coverage_scope+=(--data-urlencode "pullRequest=$PR_NUMBER")
-          elif [[ "$GITHUB_REF_NAME" != "main" ]]; then
-            coverage_scope+=(--data-urlencode "branch=$GITHUB_REF_NAME")
-          fi
-          if coverage_response="$(curl --fail --silent --show-error \
-            --user "$SONAR_TOKEN:" \
-            --get \
-            "${coverage_scope[@]}" \
-            --data-urlencode "metricKeys=new_coverage,new_lines_to_cover,new_uncovered_lines,new_conditions_to_cover,new_uncovered_conditions" \
-            --data-urlencode "qualifiers=FIL" \
-            --data-urlencode "ps=100" \
-            https://sonarcloud.io/api/measures/component_tree 2>/dev/null)"; then
-            jq -r '.components[] | [.path, ([.measures[] | "\(.metric)=\(.value)"] | join(" "))] | @tsv' <<< "$coverage_response"
-          else
-            echo "SonarCloud file-level coverage metrics were unavailable."
-          fi
-
       - name: Fail when SonarCloud secret is missing
         if: env.HAS_SONAR_TOKEN != 'true'
         run: echo "::error::SonarCloud analysis cannot run because SONAR_TOKEN is not configured." && exit 1
