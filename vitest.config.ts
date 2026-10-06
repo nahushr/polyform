@@ -7,9 +7,13 @@ const sourceRoot = fileURLToPath(new URL("./src", import.meta.url));
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: {
-      "@": sourceRoot,
-    },
+    alias: [
+      {
+        find: /^@simplishelf\/polyform$/,
+        replacement: fileURLToPath(new URL("./src/index.ts", import.meta.url)),
+      },
+      { find: "@", replacement: sourceRoot },
+    ],
   },
   test: {
     include: ["tests/**/*.test.tsx"],
