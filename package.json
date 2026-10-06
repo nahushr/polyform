@@ -1,6 +1,6 @@
 {
   "name": "@simplishelf/polyform",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Config driven React forms built from reusable field components.",
   "type": "module",
   "license": "MIT",
