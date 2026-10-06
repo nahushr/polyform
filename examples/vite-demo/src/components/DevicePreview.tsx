@@ -30,6 +30,7 @@ export function DevicePreview({ children, label }: DevicePreviewProps): JSX.Elem
             onClick={() => setPreviewMode("desktop")}
           >
             <span aria-hidden="true" className="device-preview__icon device-preview__icon--desktop" />
+            {" "}
             Desktop
           </button>
           <button
@@ -39,6 +40,7 @@ export function DevicePreview({ children, label }: DevicePreviewProps): JSX.Elem
             onClick={() => setPreviewMode("phone")}
           >
             <span aria-hidden="true" className="device-preview__icon device-preview__icon--phone" />
+            {" "}
             Phone
           </button>
         </fieldset>

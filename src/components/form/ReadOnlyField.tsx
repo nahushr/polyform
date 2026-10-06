@@ -413,6 +413,13 @@ const renderArrayValue = (value: unknown[]): ReactNode => (
   </div>
 );
 
+const renderFallbackValue = (value: unknown): ReactNode => {
+  if (Array.isArray(value)) return renderArrayValue(value);
+  const stringValue = asString(value);
+  if (stringValue) return stringValue;
+  return isRecord(value) ? JSON.stringify(value, null, 2) : "";
+};
+
 const renderReadOnlyContent = <TFieldValues extends DataRecord>(
   field: FieldConfig<TFieldValues>,
   value: unknown,
@@ -493,9 +500,7 @@ const renderReadOnlyContent = <TFieldValues extends DataRecord>(
       const text = cleanRichText(asString(value));
       return <div className={styles["multiline-value"]}>{text || "Not provided"}</div>;
     }
-    default:
-      return Array.isArray(value) ? renderArrayValue(value)
-        : asString(value) || (isRecord(value) ? JSON.stringify(value, null, 2) : "");
+    default: return renderFallbackValue(value);
   }
 };
 

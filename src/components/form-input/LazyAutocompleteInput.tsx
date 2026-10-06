@@ -433,7 +433,7 @@ const LazyAutocompleteInput = forwardRef<
       if (value !== undefined && value !== null && value !== "") {
         // If we have a value but no selectedOption, try to find it in options
         const found = options.find((opt) => opt.value === value);
-        if (found && (!selectedOption || selectedOption.value !== value)) {
+        if (found && selectedOption?.value !== value) {
           setSelectedOption(found);
         }
       } else if (value === "" || value === null) {
