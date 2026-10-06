@@ -103,6 +103,36 @@ function LeadForm() {
 
 `classNames` accepts class names for the root, card, card header/title/subtitle/divider, sections, and field grid items. Each card and section can also override its own classes with `className`, `headerClassName`, `titleClassName`, `subtitleClassName`, and related section props. A horizontal divider appears below each card heading. Set `titleTypography` and `subtitleTypography` per card to customize `fontStyle`, `color`, `fontSize`, and `fontFamily`.
 
+### Optional test-data button
+
+Import `PolyFormTestFillButton` alongside `PolyForm` and render it inside the same native `<form>`. It fills all registered PolyForm fields with realistic sample values. Choice fields use configured options, and `LazyAutocomplete` calls its `fetchOptions` function and only selects a returned option. If a custom field manages its value outside React Hook Form, give that field a `testValue` factory.
+
+```tsx
+import { useForm } from "react-hook-form";
+import { PolyForm, PolyFormTestFillButton } from "@simplishelf/polyform";
+
+function LeadForm() {
+  const { control, handleSubmit, setValue, trigger, formState: { errors } } =
+    useForm<LeadFormData>();
+
+  return (
+    <form onSubmit={handleSubmit((values) => console.log(values))}>
+      <PolyForm
+        cards={cards}
+        control={control}
+        errors={errors}
+        setValue={setValue}
+        trigger={trigger}
+      />
+      <PolyFormTestFillButton className="lead-form__test-fill" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+`PolyFormTestFillButton` accepts only a `className` for styling. Forms with address fields should pass `setValue` to `PolyForm`, as they do for normal controlled updates.
+
 ## Supported field types
 
 `Text`, `Email`, `Phone`, `Password`, `Number`, `Date`, `DateRange`, `DateTime`, `Time`, `Select`, `Autocomplete`, `LazyAutocomplete`, `Textarea`, `RichText`, `Image`, `MultipleImage`, `MultipleFile`, `Code`, `Checkbox`, `MultiCheckbox`, `Radio`, `RadioGroup`, `MultiSelect`, `LeadLabels`, `Address`, `Switch`, `Currency`, `Slider`, `RangeSlider`, `Rating`, `EmojiText`, `Color`, `KeyValue`, and `KeyValueSelect`.

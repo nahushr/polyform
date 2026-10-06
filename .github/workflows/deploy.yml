@@ -35,6 +35,11 @@ jobs:
       - name: Build package
         run: npm run build
 
+      - name: Use the checked-out package in the demo build
+        run: |
+          rm -rf node_modules/@simplishelf/polyform
+          ln -s "$GITHUB_WORKSPACE" node_modules/@simplishelf/polyform
+
       - name: Build the Vite example
         run: npm run build --workspace polyform-vite-demo
 

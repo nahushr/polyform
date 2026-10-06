@@ -1,6 +1,9 @@
 import {
   lazy,
   Suspense,
+  useEffect,
+  useRef,
+  useState,
   type CSSProperties,
   type ComponentType,
   type ReactNode,
@@ -71,6 +74,8 @@ import {
   type SliderMark,
 } from "../form-input";
 import styles from "./PolyForm.module.scss";
+import { registerPolyFormFillHandler } from "./testFillRegistry";
+import { fillPolyFormTestData } from "./testFillData";
 
 const LazyAddressFormController = lazy(
   () => import("./AddressFormController"),
@@ -200,6 +205,8 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   afterContent?: ReactNode;
   // Content rendered beside the standard field (for example, a field action)
   endContent?: ReactNode;
+  /** Optional test value factory for custom fields used by the test-fill button. */
+  testValue?: () => unknown | Promise<unknown>;
 }
 
 /**
@@ -298,6 +305,29 @@ export const PolyForm = <
   trigger: formTrigger,
   classNames = {},
 }: PolyFormProps<TFieldValues>): JSX.Element => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [testFillLazyOptions, setTestFillLazyOptions] = useState<
+    Record<string, LazyOption>
+  >({});
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+
+    return registerPolyFormFillHandler(root, () =>
+      fillPolyFormTestData({
+        cards,
+        setValue: formSetValue,
+        trigger: formTrigger,
+        disabled,
+        isView,
+        onLazyOption: (name, option) => {
+          setTestFillLazyOptions((current) => ({ ...current, [name]: option }));
+        },
+      }),
+    );
+  }, [cards, disabled, formSetValue, formTrigger, isView]);
+
   const renderField = (fieldConfig: FieldConfig<TFieldValues>): JSX.Element => {
     const {
       name,
@@ -557,7 +587,7 @@ export const PolyForm = <
                       pageSize={lazyPageSize}
                       debounceMs={lazyDebounceMs}
                       maxHeight={maxHeight}
-                      initialOption={initialOption}
+                      initialOption={testFillLazyOptions[String(name)] ?? initialOption}
                       value={rawValue ?? null}
                       onChange={(_event, newValue) => {
                         fieldProps.onChange(newValue?.value ?? "");
@@ -1085,7 +1115,11 @@ export const PolyForm = <
   };
 
   return (
-    <AppBox className={joinClassNames(styles.root, classNames.root)}>
+    <AppBox
+      ref={rootRef}
+      data-polyform-root=""
+      className={joinClassNames(styles.root, classNames.root)}
+    >
       {cards.map((card, cardIndex) => (
         <AppPaper
           component="section"

@@ -183,12 +183,17 @@ const LazyAutocompleteInput = forwardRef<
       initialOption ?? null,
     );
 
-    // Set initial option when it changes (for edit mode)
+    // Keep the option object in sync when a caller supplies a valid option for
+    // the current raw value (edit mode and programmatic test-data fills).
     useEffect(() => {
-      if (initialOption && !selectedOption) {
+      if (
+        initialOption &&
+        initialOption.value === value &&
+        selectedOption?.value !== initialOption.value
+      ) {
         setSelectedOption(initialOption);
       }
-    }, [initialOption, selectedOption]);
+    }, [initialOption, selectedOption, value]);
 
     /**
      * Fetch options from server
