@@ -10,14 +10,14 @@
 </p>
 
 <p align="center">
-  <a href="https://stackblitz.com/fork/github/nahushr/polyform?startScript=dev:example"><img alt="Open the PolyForm example in StackBlitz" src="https://developer.stackblitz.com/img/open_in_stackblitz.svg" /></a>
+  <a href="https://stackblitz.com/github/nahushr/polyform?file=examples/vite-demo/src/App.tsx&amp;startScript=dev:example"><img alt="Open the PolyForm example in StackBlitz" src="https://developer.stackblitz.com/img/open_in_stackblitz.svg" /></a>
 </p>
 
 ## Demo
 
 | Online | Local |
 |---|---|
-| [Open the React example in StackBlitz](https://stackblitz.com/fork/github/nahushr/polyform?startScript=dev:example) | `npm ci` → `npm run dev:example` → [localhost:7001](http://localhost:7001) |
+| [Open the React example in StackBlitz](https://stackblitz.com/github/nahushr/polyform?file=examples/vite-demo/src/App.tsx&startScript=dev:example) | `npm ci` → `npm run dev:example` → [localhost:7001](http://localhost:7001) |
 
 | Example | Fixture | Features |
 |---|---|---|

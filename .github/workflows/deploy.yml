@@ -105,7 +105,10 @@ jobs:
   publish:
     name: Publish to npm
     needs: analyze
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      !contains(github.event.head_commit.message, '[skip publish]')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
