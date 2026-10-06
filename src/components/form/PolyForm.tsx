@@ -74,6 +74,7 @@ import {
   type SliderMark,
 } from "../form-input";
 import styles from "./PolyForm.module.scss";
+import ReadOnlyField from "./ReadOnlyField";
 import { registerPolyFormFillHandler } from "./testFillRegistry";
 import { fillPolyFormTestData } from "./testFillData";
 
@@ -161,6 +162,8 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   switchLabel?: string;
   switchLabelPlacement?: "start" | "end" | "top" | "bottom";
   // For slider fields
+  /** Optional path to a currency field used to format numeric values in view mode. */
+  currencyFieldName?: Path<TFieldValues>;
   sliderMin?: number;
   sliderMax?: number;
   sliderStep?: number | null;
@@ -201,6 +204,8 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   ) => ControllerRenderProps<TFieldValues, Path<TFieldValues>>;
   // For custom content (renders instead of standard field)
   customContent?: () => ReactNode;
+  /** Optional custom read-only value renderer. */
+  viewContent?: (value: unknown, values?: TFieldValues) => ReactNode;
   // Content rendered immediately below the standard field
   afterContent?: ReactNode;
   // Content rendered beside the standard field (for example, a field action)
@@ -267,8 +272,11 @@ export interface PolyFormProps<
   TFieldValues extends FieldValues = FieldValues,
 > {
   cards: Array<FormCardConfig<TFieldValues>>;
-  control: Control<TFieldValues>;
-  errors: FieldErrors<TFieldValues>;
+  /** Required in edit mode; omit for a data-only read-only view. */
+  control?: Control<TFieldValues>;
+  errors?: FieldErrors<TFieldValues>;
+  /** Form values used by the read-only view. When omitted, PolyForm reads each value from `control`. */
+  values?: TFieldValues;
   disabled?: boolean;
   isView?: boolean;
   setValue?: UseFormSetValue<TFieldValues>;
@@ -299,6 +307,7 @@ export const PolyForm = <
   cards,
   control,
   errors,
+  values,
   disabled = false,
   isView = false,
   setValue: formSetValue,
@@ -327,6 +336,15 @@ export const PolyForm = <
       }),
     );
   }, [cards, disabled, formSetValue, formTrigger, isView]);
+
+  if (!isView && !control) {
+    throw new Error("PolyForm requires React Hook Form's control prop in edit mode.");
+  }
+  if (isView && values === undefined && !control) {
+    throw new Error("PolyForm view mode requires either values or React Hook Form's control prop.");
+  }
+
+  const formControl = control as Control<TFieldValues>;
 
   const renderField = (fieldConfig: FieldConfig<TFieldValues>): JSX.Element => {
     const {
@@ -403,6 +421,51 @@ export const PolyForm = <
 
     const isFieldDisabled = disabled || fieldDisabled || isView;
 
+    if (isView) {
+      const fieldClassName = joinClassNames(
+        styles["field-grid-item"],
+        classNames.fieldGridItem,
+      );
+      const renderValue = (value: unknown): JSX.Element => (
+        <AppGrid
+          item
+          xs={gridSize.xs}
+          sm={gridSize.sm}
+          key={name as string}
+          className={fieldClassName}
+        >
+          <AppBox
+            className={endContent ? styles["field-with-end-content"] : undefined}
+          >
+            <AppBox className={endContent ? styles["field-main"] : undefined}>
+              <ReadOnlyField
+                field={fieldConfig}
+                value={value}
+                values={values}
+                lazyOption={testFillLazyOptions[String(name)]}
+              />
+            </AppBox>
+            {endContent && (
+              <AppBox className={styles["field-end"]}>{endContent}</AppBox>
+            )}
+          </AppBox>
+          {afterContent}
+        </AppGrid>
+      );
+
+      if (values !== undefined) {
+        return renderValue(get(values, name));
+      }
+
+      return (
+        <Controller
+          name={name}
+          control={formControl}
+          render={({ field }) => renderValue(field.value)}
+        />
+      );
+    }
+
     // If customContent is provided, render it directly
     if (customContent) {
       return (
@@ -434,7 +497,7 @@ export const PolyForm = <
         <AddressFormController
           key={name as string}
           name={name}
-          control={control}
+          control={formControl}
           errors={errors}
           disabled={isFieldDisabled}
           states={states}
@@ -464,7 +527,7 @@ export const PolyForm = <
           <AppBox className={endContent ? styles["field-main"] : undefined}>
             <Controller
               name={name}
-              control={control}
+              control={formControl}
               render={({ field }) => {
                 const fieldError = getFieldError(errors, name);
                 const fieldProps = modifyFieldProps
@@ -1118,6 +1181,7 @@ export const PolyForm = <
     <AppBox
       ref={rootRef}
       data-polyform-root=""
+      data-mode={isView ? "view" : "edit"}
       className={joinClassNames(styles.root, classNames.root)}
     >
       {cards.map((card, cardIndex) => (

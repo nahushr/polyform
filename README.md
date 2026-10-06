@@ -133,6 +133,40 @@ function LeadForm() {
 
 `PolyFormTestFillButton` accepts only a `className` for styling. Forms with address fields should pass `setValue` to `PolyForm`, as they do for normal controlled updates.
 
+## Read-only view mode
+
+Set `isView` to replace inputs with a styled, responsive summary of the current form data. Pass `values` to render directly from a data object; in that data-only mode, `control` and `errors` are optional. If you omit `values`, PolyForm reads the field values from React Hook Form's `control`.
+
+```tsx
+<PolyForm<LeadFormData> cards={cards} values={lead} isView />
+```
+
+```tsx
+const { control, watch, formState: { errors } } = useForm<LeadFormData>();
+const values = watch();
+
+<PolyForm
+  cards={cards}
+  control={control}
+  errors={errors}
+  values={values}
+  isView={isViewMode}
+/>
+```
+
+The read-only presenter formats phone numbers with country flags, currency values with their currency symbol and flag, and addresses, date ranges, choices, ratings, colors, images, files, code, and key-value metadata with layouts tailored to each type. Passwords are masked. Numeric fields can name a related currency field to display currency formatting:
+
+```tsx
+{
+  name: "priceRange",
+  label: "Price range",
+  type: FieldType.RangeSlider,
+  currencyFieldName: "currency",
+}
+```
+
+For custom fields, `viewContent(value, values)` can return the display content used in view mode. The example page includes an edit/view toggle and uses `watch()` so edits appear in the summary immediately.
+
 ## Supported field types
 
 `Text`, `Email`, `Phone`, `Password`, `Number`, `Date`, `DateRange`, `DateTime`, `Time`, `Select`, `Autocomplete`, `LazyAutocomplete`, `Textarea`, `RichText`, `Image`, `MultipleImage`, `MultipleFile`, `Code`, `Checkbox`, `MultiCheckbox`, `Radio`, `RadioGroup`, `MultiSelect`, `LeadLabels`, `Address`, `Switch`, `Currency`, `Slider`, `RangeSlider`, `Rating`, `EmojiText`, `Color`, `KeyValue`, and `KeyValueSelect`.

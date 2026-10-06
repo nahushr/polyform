@@ -1,4 +1,12 @@
-import { Box, Button, Container, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  FormControlLabel,
+  Paper,
+  Switch,
+  Typography,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import {
@@ -355,7 +363,7 @@ const showcaseFields: FieldConfig<DemoFormValues>[] = [
     sliderMin: 0,
     sliderMax: 500,
     sliderStep: 10,
-    sliderUnit: "$",
+    currencyFieldName: "currency",
     gridSize: { xs: 12, sm: 6 },
   },
   {
@@ -499,33 +507,59 @@ const showcaseCards: FormCardConfig<DemoFormValues>[] = [
   },
 ];
 
-const emptyValues: DemoFormValues = {
-  firstName: "",
-  email: "",
-  phone: "",
-  password: "",
-  employees: 0,
-  startDate: null,
-  launchWindow: { dateTime: null, timezone: "America/New_York" },
-  status: "",
-  country: "",
+const createDemoImage = (title: string): string =>
+  `data:image/svg+xml;charset=utf-8,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="300" viewBox="0 0 480 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3855d6"/><stop offset="1" stop-color="#16b7a7"/></linearGradient></defs><rect width="480" height="300" rx="24" fill="url(#g)"/><circle cx="385" cy="78" r="43" fill="#fff" fill-opacity=".45"/><text x="32" y="244" fill="#fff" font-family="Arial,sans-serif" font-size="28" font-weight="700">${title}</text></svg>`,
+  )}`;
+
+const createDemoAttachment = (): File[] =>
+  typeof File === "undefined"
+    ? []
+    : [
+        new File(
+          ["PolyForm demo attachment"],
+          "campaign-brief.txt",
+          { type: "text/plain", lastModified: Date.now() },
+        ),
+      ];
+
+const initialValues: DemoFormValues = {
+  firstName: "Avery",
+  email: "avery.morgan@example.com",
+  phone: "+14155552671",
+  password: "PolyForm!2026",
+  employees: 42,
+  startDate: new Date(2026, 3, 15),
+  launchWindow: {
+    dateTime: new Date(2026, 3, 21, 10, 30),
+    timezone: "America/New_York",
+  },
+  status: "qualified",
+  country: "United States",
   assignedAgentId: 101,
-  company: "",
-  notes: "",
-  description: "",
-  avatar: "",
-  gallery: {},
-  attachments: [],
+  company: "Northstar Labs",
+  notes: "Interested in a product walkthrough and follow-up next week.",
+  description:
+    "<p>Avery's team is evaluating tools to improve their customer intake workflow.</p>",
+  avatar: createDemoImage("Avery Morgan"),
+  gallery: {
+    "campaign.svg": createDemoImage("Campaign"),
+    "team.svg": createDemoImage("Team"),
+  },
+  attachments: createDemoAttachment(),
   code: "SELECT id, first_name, email\nFROM leads\nWHERE status = 'qualified';",
   address: {
-    streetAddress: "",
-    streetAddress2: "",
+    streetAddress: "42 Market Street",
+    streetAddress2: "Suite 240",
     streetAddress3: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "",
-    addressType: "",
+    city: "San Francisco",
+    state: "California",
+    postalCode: "94103",
+    country: "United States",
+    addressType: "OFFICE",
+    nameOnAddress: "Avery Morgan",
+    emailOnAddress: "avery.morgan@example.com",
+    phoneOnAddress: "+14155552671",
   },
   active: true,
   currency: "USD",
@@ -555,8 +589,8 @@ const emptyValues: DemoFormValues = {
   starRating: 4.5,
   emojiMessage: "Thanks for reaching out! 👋",
   brandColor: "#3957d7",
-  openingTime: null,
-  bookingWindow: { start: null, end: null },
+  openingTime: new Date(2026, 3, 15, 9, 30),
+  bookingWindow: { start: new Date(2026, 4, 1), end: new Date(2026, 4, 8) },
   metadata: [
     { key: "environment", value: "production" },
     { key: "retryLimit", value: "3" },
@@ -572,12 +606,15 @@ const App = (): JSX.Element => {
     control,
     setValue,
     trigger,
+    watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<DemoFormValues>({ defaultValues: emptyValues });
+  } = useForm<DemoFormValues>({ defaultValues: initialValues });
   const [submittedValues, setSubmittedValues] = useState<DemoFormValues | null>(
     null,
   );
+  const [isViewMode, setIsViewMode] = useState(false);
+  const currentValues = watch();
 
   const formatSubmittedValues = (): string =>
     JSON.stringify(
@@ -619,10 +656,31 @@ const App = (): JSX.Element => {
           onSubmit={handleSubmit((values) => setSubmittedValues(values))}
           noValidate
         >
+          <div className="demo-form__view-toggle">
+            <div className="demo-form__view-toggle-copy">
+              <strong>Form presentation</strong>
+              <span>Switch between editable controls and a polished read-only summary.</span>
+            </div>
+            <FormControlLabel
+              className="demo-form__view-toggle-control"
+              control={
+                <Switch
+                  checked={isViewMode}
+                  onChange={(event) => setIsViewMode(event.target.checked)}
+                  color="primary"
+                  inputProps={{ "aria-label": "Toggle form view mode" }}
+                />
+              }
+              label={isViewMode ? "View mode" : "Edit mode"}
+              labelPlacement="start"
+            />
+          </div>
           <PolyForm
             cards={showcaseCards}
             control={control}
             errors={errors}
+            values={currentValues}
+            isView={isViewMode}
             setValue={setValue}
             trigger={trigger}
             classNames={{
@@ -632,12 +690,14 @@ const App = (): JSX.Element => {
               sectionTitle: "demo-form__section-title",
             }}
           />
-          <div className="demo-form__actions">
-            <PolyFormTestFillButton className="demo-form__test-fill" />
-            <Button type="submit" variant="contained" size="large">
-              Submit
-            </Button>
-          </div>
+          {!isViewMode && (
+            <div className="demo-form__actions">
+              <PolyFormTestFillButton className="demo-form__test-fill" />
+              <Button type="submit" variant="contained" size="large">
+                Submit
+              </Button>
+            </div>
+          )}
           {submittedValues && (
             <Paper
               component="section"
