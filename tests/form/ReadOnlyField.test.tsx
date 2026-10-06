@@ -2,10 +2,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import type { FieldValues } from "react-hook-form";
 
-import { FieldType } from "../../constants/appConstants";
-import type { CurrencyOption } from "../../constants/currency";
-import type { FieldConfig } from "./PolyForm";
-import ReadOnlyField from "./ReadOnlyField";
+import { FieldType } from "../../src/constants/appConstants";
+import type { CurrencyOption } from "../../src/constants/currency";
+import type { FieldConfig } from "../../src/components/form/PolyForm";
+import ReadOnlyField from "../../src/components/form/ReadOnlyField";
 
 type Values = FieldValues;
 
