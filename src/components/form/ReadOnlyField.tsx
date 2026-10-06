@@ -215,9 +215,9 @@ const renderDateRange = (value: unknown, pattern: string): ReactNode => {
   const end = displayDate(range.end, pattern);
   return (
     <div className={styles["date-range"]}>
-      <div><span>From</span><strong>{start || "Not set"}</strong></div>
+      <div><span>From</span><strong>{start || "—"}</strong></div>
       <span className={styles["range-arrow"]} aria-hidden="true">→</span>
-      <div><span>To</span><strong>{end || "Not set"}</strong></div>
+      <div><span>To</span><strong>{end || "—"}</strong></div>
     </div>
   );
 };
@@ -303,7 +303,7 @@ const renderAddress = (value: unknown): ReactNode => {
     ["Phone", address.phoneOnAddress],
   ].filter((item): item is [string, unknown] => Boolean(asString(item[1])));
   if (!streetLines.length && !regionLine && !country && !addressType && !additional.length) {
-    return <span className={styles["empty-value"]}>Not provided</span>;
+    return <span className={styles["empty-value"]}>—</span>;
   }
   return (
     <div className={styles["address-card"]}>
@@ -428,7 +428,7 @@ const renderReadOnlyContent = <TFieldValues extends DataRecord>(
 ): ReactNode => {
   const { label = "", type = FieldType.Text } = field;
   if (field.viewContent) return field.viewContent(value, values);
-  if (isEmpty(value)) return <span className={styles["empty-value"]}>Not provided</span>;
+  if (isEmpty(value)) return <span className={styles["empty-value"]}>—</span>;
 
   switch (type) {
     case FieldType.Phone: return <PhoneValue value={value} />;
@@ -452,7 +452,7 @@ const renderReadOnlyContent = <TFieldValues extends DataRecord>(
       const timezone = asString(dateTime.timezone);
       return (
         <div className={styles["date-time-value"]}>
-          <strong>{displayDate(dateTime.dateTime, "EEEE, MMM d, yyyy 'at' h:mm a") || "Not set"}</strong>
+          <strong>{displayDate(dateTime.dateTime, "EEEE, MMM d, yyyy 'at' h:mm a") || "—"}</strong>
           {timezone && <span>{timezone.replace(/_/g, " ")}</span>}
         </div>
       );
@@ -477,7 +477,7 @@ const renderReadOnlyContent = <TFieldValues extends DataRecord>(
     case FieldType.MultipleImage: {
       const sources = imageSources(value);
       return sources.length ? <ImageGallery sources={sources} label={label} />
-        : <span className={styles["empty-value"]}>No images</span>;
+        : <span className={styles["empty-value"]}>—</span>;
     }
     case FieldType.MultipleFile: return renderFiles(value);
     case FieldType.Code:
@@ -498,7 +498,7 @@ const renderReadOnlyContent = <TFieldValues extends DataRecord>(
     case FieldType.Textarea: return <div className={styles["multiline-value"]}>{asString(value)}</div>;
     case FieldType.RichText: {
       const text = cleanRichText(asString(value));
-      return <div className={styles["multiline-value"]}>{text || "Not provided"}</div>;
+      return <div className={styles["multiline-value"]}>{text || "—"}</div>;
     }
     default: return renderFallbackValue(value);
   }

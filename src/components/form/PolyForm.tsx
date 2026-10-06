@@ -434,22 +434,12 @@ export const PolyForm = <
           key={name as string}
           className={fieldClassName}
         >
-          <AppBox
-            className={endContent ? styles["field-with-end-content"] : undefined}
-          >
-            <AppBox className={endContent ? styles["field-main"] : undefined}>
-              <ReadOnlyField
-                field={fieldConfig}
-                value={value}
-                values={values}
-                lazyOption={testFillLazyOptions[String(name)]}
-              />
-            </AppBox>
-            {endContent && (
-              <AppBox className={styles["field-end"]}>{endContent}</AppBox>
-            )}
-          </AppBox>
-          {afterContent}
+          <ReadOnlyField
+            field={fieldConfig}
+            value={value}
+            values={values}
+            lazyOption={testFillLazyOptions[String(name)]}
+          />
         </AppGrid>
       );
 
