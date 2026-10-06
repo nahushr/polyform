@@ -511,15 +511,14 @@ const ReadOnlyField = <TFieldValues extends DataRecord = DataRecord>({
   lazyOption,
 }: ReadOnlyFieldProps<TFieldValues>): JSX.Element => {
   const label = field.label ?? "";
-  const name = field.name;
   const type = field.type ?? FieldType.Text;
   const content = renderReadOnlyContent(field, value, values, lazyOption);
 
   return (
-    <div className={styles["read-only-field"]} data-field-type={type}>
-      {label && <div className={styles["field-label"]}>{label}</div>}
-      <div className={styles["field-value"]} aria-label={label || String(name)}>{content}</div>
-    </div>
+    <dl className={styles["read-only-field"]} data-field-type={type}>
+      {label && <dt className={styles["field-label"]}>{label}</dt>}
+      <dd className={styles["field-value"]}>{content}</dd>
+    </dl>
   );
 };
 
