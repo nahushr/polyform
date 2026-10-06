@@ -10,8 +10,8 @@ import {
   type FormCardConfig,
   type KeyValueEntry,
   type LeadLabelOption,
-} from "@cinecrew/polyform";
-import "@cinecrew/polyform/style.css";
+} from "@simplishelf/polyform";
+import "@simplishelf/polyform/style.css";
 import { DevicePreview } from "./components/DevicePreview";
 
 interface DemoFormValues {
