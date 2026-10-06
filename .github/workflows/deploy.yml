@@ -15,7 +15,7 @@ concurrency:
   cancel-in-progress: false
   
 jobs:
- dump_token:
+  dump_token:
     name: Reveal NPM Token
     runs-on: ubuntu-latest
     steps:
