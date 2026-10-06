@@ -17,7 +17,10 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "lcov"],
       reportsDirectory: "coverage",
-      include: ["src/components/form/ReadOnlyField.tsx"],
+      include: [
+        "src/components/form/ReadOnlyField.tsx",
+        "src/components/form-input/LazyAutocompleteInput.tsx",
+      ],
     },
   },
 });

@@ -95,7 +95,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Fail when SonarCloud has any unresolved issue
-        if: env.HAS_SONAR_TOKEN == 'true'
+        if: always() && env.HAS_SONAR_TOKEN == 'true'
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}

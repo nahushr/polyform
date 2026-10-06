@@ -268,5 +268,8 @@ describe("ReadOnlyField", () => {
 
     const object = renderField("unknown" as FieldType, { extra: "details" });
     expect(object).toContain("details");
+
+    const unsupportedPrimitive = renderField("unknown" as FieldType, Symbol("details"));
+    expect(unsupportedPrimitive).not.toContain("Not provided");
   });
 });
