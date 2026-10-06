@@ -87,6 +87,8 @@ jobs:
             -Dsonar.projectKey=nahushr_polyform
             -Dsonar.organization=nahushr
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.tests=src/components/form
+            -Dsonar.test.inclusions=src/components/form/**/*.test.tsx
             -Dsonar.qualitygate.wait=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
