@@ -12,6 +12,7 @@ import {
   type LeadLabelOption,
 } from "@cinecrew/polyform";
 import "@cinecrew/polyform/style.css";
+import { DevicePreview } from "./components/DevicePreview";
 
 interface DemoFormValues {
   firstName: string;
@@ -756,47 +757,49 @@ const App = (): JSX.Element => {
         </Typography>
       </Box>
 
-      <Box
-        component="form"
-        className="demo-form"
-        onSubmit={handleSubmit((values) => setSubmittedValues(values))}
-        noValidate
-      >
-        <PolyForm
-          cards={showcaseCards}
-          control={control}
-          errors={errors}
-          setValue={setValue}
-          trigger={trigger}
-          classNames={{
-            card: "demo-form__card",
-            cardTitle: "demo-form__card-title",
-            cardSubtitle: "demo-form__card-subtitle",
-            sectionTitle: "demo-form__section-title",
-          }}
-        />
-        <div className="demo-form__actions">
-          <Button type="button" variant="outlined" size="large" onClick={fillTestData}>
-            Test fill
-          </Button>
-          <Button type="submit" variant="contained" size="large">
-            Submit
-          </Button>
-        </div>
-        {submittedValues && (
-          <Paper
-            component="section"
-            className="demo-form__result"
-            elevation={0}
-            aria-live="polite"
-          >
-            <Typography component="h2" variant="h6">
-              Submitted form values
-            </Typography>
-            <pre>{formatSubmittedValues()}</pre>
-          </Paper>
-        )}
-      </Box>
+      <DevicePreview label="PolyForm example">
+        <Box
+          component="form"
+          className="demo-form"
+          onSubmit={handleSubmit((values) => setSubmittedValues(values))}
+          noValidate
+        >
+          <PolyForm
+            cards={showcaseCards}
+            control={control}
+            errors={errors}
+            setValue={setValue}
+            trigger={trigger}
+            classNames={{
+              card: "demo-form__card",
+              cardTitle: "demo-form__card-title",
+              cardSubtitle: "demo-form__card-subtitle",
+              sectionTitle: "demo-form__section-title",
+            }}
+          />
+          <div className="demo-form__actions">
+            <Button type="button" variant="outlined" size="large" onClick={fillTestData}>
+              Test fill
+            </Button>
+            <Button type="submit" variant="contained" size="large">
+              Submit
+            </Button>
+          </div>
+          {submittedValues && (
+            <Paper
+              component="section"
+              className="demo-form__result"
+              elevation={0}
+              aria-live="polite"
+            >
+              <Typography component="h2" variant="h6">
+                Submitted form values
+              </Typography>
+              <pre>{formatSubmittedValues()}</pre>
+            </Paper>
+          )}
+        </Box>
+      </DevicePreview>
     </Container>
   );
 };
