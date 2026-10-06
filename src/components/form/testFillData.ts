@@ -21,8 +21,17 @@ const names = ["Avery", "Jordan", "Morgan", "Riley"];
 const surnames = ["Morgan", "Lee", "Patel", "Chen"];
 const companies = ["Northstar Labs", "Juniper Works", "Brightline Studio"];
 
+const randomFraction = (): number => {
+  const cryptoApi = globalThis.crypto;
+  if (!cryptoApi?.getRandomValues) return 0;
+
+  const value = new Uint32Array(1);
+  cryptoApi.getRandomValues(value);
+  return (value[0] ?? 0) / 0x1_0000_0000;
+};
+
 const sample = <T,>(items: readonly T[]): T | undefined =>
-  items.length ? items[Math.floor(Math.random() * items.length)] : undefined;
+  items.length ? items[Math.floor(randomFraction() * items.length)] : undefined;
 
 const getFieldKey = (field: FieldConfig<FieldValues>): string =>
   String(field.name).split(".").at(-1)?.toLowerCase() ?? "field";
@@ -30,7 +39,7 @@ const getFieldKey = (field: FieldConfig<FieldValues>): string =>
 const getIdentity = (): { firstName: string; lastName: string; suffix: number } => ({
   firstName: sample(names) ?? "Avery",
   lastName: sample(surnames) ?? "Morgan",
-  suffix: Math.floor(100 + Math.random() * 900),
+  suffix: Math.floor(100 + randomFraction() * 900),
 });
 
 const getEmail = (firstName: string, lastName: string, suffix: number): string =>

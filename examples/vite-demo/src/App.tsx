@@ -527,7 +527,7 @@ const initialValues: DemoFormValues = {
   firstName: "Avery",
   email: "avery.morgan@example.com",
   phone: "+14155552671",
-  password: "PolyForm!2026",
+  password: "",
   employees: 42,
   startDate: new Date(2026, 3, 15),
   launchWindow: {

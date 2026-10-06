@@ -30,7 +30,10 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
+
+      - name: Run unit tests with coverage
+        run: npm run test:coverage
 
       - name: Build package
         run: npm run build
@@ -71,21 +74,26 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
-      - name: Run SonarCloud analysis
+      - name: Run unit tests and produce the SonarCloud coverage report
+        run: npm run test:coverage
+
+      - name: Run SonarCloud analysis and wait for the quality gate
         if: env.HAS_SONAR_TOKEN == 'true'
+        uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0
+        with:
+          args: >-
+            -Dsonar.projectKey=nahushr_polyform
+            -Dsonar.organization=nahushr
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.qualitygate.wait=true
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: >-
-          npx --yes sonarqube-scanner@5.0.0
-          -Dsonar.projectKey=nahushr_polyform
-          -Dsonar.organization=nahushr
-          -Dsonar.token="$SONAR_TOKEN"
 
-      - name: Note missing SonarCloud secret
+      - name: Fail when SonarCloud secret is missing
         if: env.HAS_SONAR_TOKEN != 'true'
-        run: echo "::notice::SonarCloud analysis skipped because SONAR_TOKEN is not configured."
+        run: echo "::error::SonarCloud analysis cannot run because SONAR_TOKEN is not configured." && exit 1
 
       - name: Set up Snyk CLI
         if: env.HAS_SNYK_TOKEN == 'true'
@@ -145,7 +153,7 @@ jobs:
 
       - name: Install dependencies
         if: env.HAS_NPM_TOKEN == 'true'
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Select the next available patch version
         if: env.HAS_NPM_TOKEN == 'true'
