@@ -1,6 +1,6 @@
 {
   "name": "@cinecrew/polyform",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Config driven React forms built from reusable field components.",
   "type": "module",
   "license": "MIT",
