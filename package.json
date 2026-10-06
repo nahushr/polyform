@@ -88,6 +88,7 @@
     "@mui/icons-material": "^5.15.0",
     "@mui/material": "^5.15.0",
     "@mui/x-date-pickers": "^7.0.0",
+    "@rolldown/binding-wasm32-wasi": "1.2.12",
     "@types/node": "^20.14.12",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
