@@ -45,6 +45,19 @@ const SummaryField = <TFieldValues extends FieldValues>({
       className={styles["summary-field-content"]}
     />
   );
+  let valueContent: JSX.Element | null = null;
+
+  if (values !== undefined) {
+    valueContent = renderValue(get(values, field.name));
+  } else if (control) {
+    valueContent = (
+      <Controller
+        name={field.name}
+        control={control}
+        render={({ field: controllerField }) => renderValue(controllerField.value)}
+      />
+    );
+  }
 
   return (
     <div
@@ -52,15 +65,7 @@ const SummaryField = <TFieldValues extends FieldValues>({
       data-xs={xs}
       data-sm={sm}
     >
-      {values !== undefined ? (
-        renderValue(get(values, field.name))
-      ) : control ? (
-        <Controller
-          name={field.name}
-          control={control}
-          render={({ field: controllerField }) => renderValue(controllerField.value)}
-        />
-      ) : null}
+      {valueContent}
     </div>
   );
 };
@@ -146,7 +151,6 @@ const PolyFormView = <TFieldValues extends FieldValues>({
               classNames.viewCardDivider,
               card.dividerClassName,
             )}
-            role="presentation"
           />
         ) : null}
 
@@ -179,7 +183,6 @@ const PolyFormView = <TFieldValues extends FieldValues>({
                     classNames.viewSectionDivider,
                     section.dividerClassName,
                   )}
-                  role="presentation"
                 />
               </>
             )}
