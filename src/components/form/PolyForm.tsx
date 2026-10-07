@@ -74,7 +74,7 @@ import {
   type SliderMark,
 } from "../form-input";
 import styles from "./PolyForm.module.scss";
-import ReadOnlyField from "./ReadOnlyField";
+import PolyFormView from "./PolyFormView";
 import { registerPolyFormFillHandler } from "./testFillRegistry";
 import { fillPolyFormTestData } from "./testFillData";
 
@@ -267,6 +267,16 @@ export interface PolyFormClassNames {
   divider?: string;
   dividerSpacer?: string;
   fieldGridItem?: string;
+  viewRoot?: string;
+  viewCard?: string;
+  viewCardHeader?: string;
+  viewCardTitle?: string;
+  viewCardSubtitle?: string;
+  viewCardDivider?: string;
+  viewSection?: string;
+  viewSectionTitle?: string;
+  viewSectionDivider?: string;
+  viewField?: string;
 }
 
 export interface PolyFormProps<
@@ -345,6 +355,19 @@ export const PolyForm = <
     throw new Error("PolyForm view mode requires either values or React Hook Form's control prop.");
   }
 
+  if (isView) {
+    return (
+      <PolyFormView
+        cards={cards}
+        control={control}
+        values={values}
+        classNames={classNames}
+        rootRef={rootRef}
+        lazyOptions={testFillLazyOptions}
+      />
+    );
+  }
+
   const formControl = control as Control<TFieldValues>;
 
   const renderField = (fieldConfig: FieldConfig<TFieldValues>): JSX.Element => {
@@ -419,42 +442,7 @@ export const PolyForm = <
       endContent,
     } = fieldConfig;
 
-    const isFieldDisabled = disabled || fieldDisabled || isView;
-
-    if (isView) {
-      const fieldClassName = joinClassNames(
-        styles["field-grid-item"],
-        classNames.fieldGridItem,
-      );
-      const renderValue = (value: unknown): JSX.Element => (
-        <AppGrid
-          item
-          xs={gridSize.xs}
-          sm={gridSize.sm}
-          key={name as string}
-          className={fieldClassName}
-        >
-          <ReadOnlyField
-            field={fieldConfig}
-            value={value}
-            values={values}
-            lazyOption={testFillLazyOptions[String(name)]}
-          />
-        </AppGrid>
-      );
-
-      if (values !== undefined) {
-        return renderValue(get(values, name));
-      }
-
-      return (
-        <Controller
-          name={name}
-          control={formControl}
-          render={({ field }) => renderValue(field.value)}
-        />
-      );
-    }
+    const isFieldDisabled = disabled || fieldDisabled;
 
     // If customContent is provided, render it directly
     if (customContent) {
@@ -1028,7 +1016,6 @@ export const PolyForm = <
                       label={label}
                       required={required}
                       disabled={isFieldDisabled}
-                      readOnly={isView}
                       error={!!fieldError}
                       helperText={fieldError?.message}
                     />

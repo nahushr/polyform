@@ -20,6 +20,7 @@ export interface ReadOnlyFieldProps<TFieldValues extends DataRecord = DataRecord
   value: unknown;
   values?: TFieldValues;
   lazyOption?: LazyOption;
+  className?: string;
 }
 
 const isRecord = (value: unknown): value is DataRecord =>
@@ -509,13 +510,17 @@ const ReadOnlyField = <TFieldValues extends DataRecord = DataRecord>({
   value,
   values,
   lazyOption,
+  className,
 }: ReadOnlyFieldProps<TFieldValues>): JSX.Element => {
   const label = field.label ?? "";
   const type = field.type ?? FieldType.Text;
   const content = renderReadOnlyContent(field, value, values, lazyOption);
 
   return (
-    <dl className={styles["read-only-field"]} data-field-type={type}>
+    <dl
+      className={[styles["read-only-field"], className].filter(Boolean).join(" ")}
+      data-field-type={type}
+    >
       {label && <dt className={styles["field-label"]}>{label}</dt>}
       <dd className={styles["field-value"]}>{content}</dd>
     </dl>

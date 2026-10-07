@@ -1,0 +1,122 @@
+.view-root {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summary-card {
+  min-width: 0;
+  padding: clamp(1.125rem, 3vw, 2rem);
+  border: 1px solid #e2e8f3;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fff 0%, #fbfcff 100%);
+  box-shadow: 0 12px 32px rgba(32, 51, 85, 0.07);
+}
+
+.summary-card-header {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+}
+
+.summary-heading {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.summary-title {
+  margin: 0;
+  color: #172747;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-weight: 720;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+}
+
+.summary-subtitle {
+  margin: 0;
+  color: #66748c;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.summary-card-divider {
+  height: 1px;
+  margin: 1.1rem 0 1.5rem;
+  background: linear-gradient(90deg, #dce4f0 0%, rgba(220, 228, 240, 0.25) 100%);
+}
+
+.summary-section + .summary-section {
+  margin-top: 1.8rem;
+}
+
+.summary-section-title {
+  margin: 0;
+  color: #34445f;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.085em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.summary-section-divider {
+  height: 1px;
+  margin: 0.7rem 0 0.45rem;
+  background: #e9edf4;
+}
+
+.summary-fields {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(1rem, 3vw, 2.5rem);
+  row-gap: 0.45rem;
+}
+
+.summary-field {
+  min-width: 0;
+  padding: 0.72rem 0.1rem 0.85rem;
+  border-bottom: 1px solid #edf0f5;
+}
+
+.summary-field-content {
+  gap: 0.32rem;
+}
+
+@for $span from 1 through 12 {
+  .summary-field[data-xs="#{$span}"] {
+    grid-column: span $span;
+  }
+}
+
+@media (min-width: 600px) {
+  @for $span from 1 through 12 {
+    .summary-field[data-sm="#{$span}"] {
+      grid-column: span $span;
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .summary-card {
+    padding: 1rem;
+    border-radius: 15px;
+  }
+
+  .summary-field[data-xs="1"],
+  .summary-field[data-xs="2"],
+  .summary-field[data-xs="3"],
+  .summary-field[data-xs="4"],
+  .summary-field[data-xs="5"],
+  .summary-field[data-xs="6"],
+  .summary-field[data-xs="7"],
+  .summary-field[data-xs="8"],
+  .summary-field[data-xs="9"],
+  .summary-field[data-xs="10"],
+  .summary-field[data-xs="11"] {
+    grid-column: span 12;
+  }
+}

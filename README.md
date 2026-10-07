@@ -101,7 +101,7 @@ function LeadForm() {
 }
 ```
 
-`classNames` accepts class names for the root, card, card header/title/subtitle/divider, sections, and field grid items. Each card and section can also override its own classes with `className`, `headerClassName`, `titleClassName`, `subtitleClassName`, and related section props. A horizontal divider appears below each card heading. Set `titleTypography` and `subtitleTypography` per card to customize `fontStyle`, `color`, `fontSize`, and `fontFamily`.
+`classNames` accepts class names for the root, card, card header/title/subtitle/divider, sections, and field grid items. Each card and section can also override its own classes with `className`, `headerClassName`, `titleClassName`, `subtitleClassName`, and related section props. A horizontal divider appears below each card heading. Set `titleTypography` and `subtitleTypography` per card to customize `fontStyle`, `color`, `fontSize`, and `fontFamily`. View mode has its own summary layout and accepts `viewRoot`, `viewCard`, `viewCardTitle`, `viewSection`, and related `view*` class names for independent styling.
 
 ### Optional test-data button
 
@@ -135,7 +135,7 @@ function LeadForm() {
 
 ## Read-only view mode
 
-Set `isView` to replace inputs with a styled, responsive summary of the current form data. Pass `values` to render directly from a data object; in that data-only mode, `control` and `errors` are optional. If you omit `values`, PolyForm reads the field values from React Hook Form's `control`.
+Set `isView` to render a separate, responsive data summary. It does not render the edit form's inputs, custom edit slots, or actions. Pass `values` to render directly from a data object; in that data-only mode, `control` and `errors` are optional. If you omit `values`, PolyForm reads the field values from React Hook Form's `control`.
 
 ```tsx
 <PolyForm<LeadFormData> cards={cards} values={lead} isView />

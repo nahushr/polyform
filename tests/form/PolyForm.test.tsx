@@ -149,6 +149,8 @@ describe("PolyForm field renderer", () => {
     });
 
     expect(container.querySelector('[data-polyform-root][data-mode="view"]')).not.toBeNull();
+    expect(container.querySelector("[data-polyform-view-card]")).not.toBeNull();
+    expect(container.querySelector(".form-card")).toBeNull();
     expect(container.querySelector("[data-field-type='text']")?.tagName).toBe("DL");
     expect(container.textContent).toContain("Avery");
     expect(container.querySelectorAll("input, textarea, select, button, [contenteditable='true']")).toHaveLength(0);
