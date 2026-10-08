@@ -172,7 +172,7 @@ const TextFieldInput = forwardRef<HTMLDivElement, TextFieldInputProps>(
           ...inputProps,
         }}
         InputProps={{
-          disableUnderline: true,
+          ...(variant === "filled" ? { disableUnderline: true } : {}),
           ...InputProps,
         }}
         {...props}

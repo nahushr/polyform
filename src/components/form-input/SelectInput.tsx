@@ -61,7 +61,7 @@ const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
           ...InputLabelProps,
         }}
         InputProps={{
-          disableUnderline: true,
+          ...(variant === "filled" ? { disableUnderline: true } : {}),
         }}
         SelectProps={{
           displayEmpty: true,

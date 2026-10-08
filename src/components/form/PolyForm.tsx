@@ -119,6 +119,8 @@ export interface FieldConfig<TFieldValues extends FieldValues = FieldValues> {
   name: Path<TFieldValues>;
   label?: string;
   type?: FieldType;
+  /** Visual style for text, select, textarea, date, and currency inputs. */
+  variant?: "outlined" | "filled" | "standard";
   required?: boolean;
   disabled?: boolean;
   gridSize?: {
@@ -375,6 +377,7 @@ export const PolyForm = <
       name,
       label = "",
       type = FieldType.Text,
+      variant = "filled",
       required = false,
       disabled: fieldDisabled = false,
       gridSize = {
@@ -549,6 +552,7 @@ export const PolyForm = <
                     <SelectInput
                       {...fieldProps}
                       label={label}
+                      variant={variant}
                       required={required}
                       disabled={isFieldDisabled}
                       error={!!fieldError}
@@ -565,6 +569,7 @@ export const PolyForm = <
                     <CurrencyInput
                       {...fieldProps}
                       label={label}
+                      variant={variant}
                       required={required}
                       disabled={isFieldDisabled}
                       error={!!fieldError}
@@ -664,6 +669,7 @@ export const PolyForm = <
                         }
                       }}
                       label={label}
+                      variant={variant}
                       required={required}
                       disabled={isFieldDisabled}
                       error={!!fieldError}
@@ -1088,6 +1094,7 @@ export const PolyForm = <
                     <TextFieldInput
                       {...fieldProps}
                       label={label}
+                      variant={variant}
                       required={required}
                       disabled={isFieldDisabled}
                       error={!!fieldError}
@@ -1111,6 +1118,7 @@ export const PolyForm = <
                   <TextFieldInput
                     {...fieldProps}
                     value={displayValue}
+                    variant={variant}
                     maxLength={maxLength}
                     onChange={(e) => {
                       const val = e.target.value;
