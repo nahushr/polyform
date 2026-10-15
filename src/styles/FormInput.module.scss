@@ -160,6 +160,10 @@
 }
 
 // Select menu item styles
+.select-menu-root {
+  z-index: 1500 !important;
+}
+
 .select-menu-item {
   border-radius: 4px;
   margin: 4px 8px;

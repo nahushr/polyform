@@ -44,6 +44,7 @@ const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
       InputLabelProps,
       className,
       placeholder,
+      SelectProps: selectProps,
       ...props
     },
     ref,
@@ -63,6 +64,7 @@ const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
         InputProps={{
           ...(variant === "filled" ? { disableUnderline: true } : {}),
         }}
+        {...props}
         SelectProps={{
           displayEmpty: true,
           renderValue: (value: unknown) => {
@@ -81,8 +83,20 @@ const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
             const selectedOption = options.find((opt) => opt.value === value);
             return selectedOption?.label ?? formatSelectValue(value);
           },
+          ...selectProps,
+          MenuProps: {
+            ...selectProps?.MenuProps,
+            classes: {
+              ...selectProps?.MenuProps?.classes,
+              root: [
+                selectProps?.MenuProps?.classes?.root,
+                styles["select-menu-root"],
+              ]
+                .filter(Boolean)
+                .join(" "),
+            },
+          },
         }}
-        {...props}
       >
         {placeholder && (
           <AppMenuItem
