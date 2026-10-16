@@ -115,7 +115,7 @@ const AutocompleteInput = forwardRef<HTMLDivElement, AutocompleteInputProps>(
             error={error}
             helperText={helperText}
             placeholder={placeholder}
-            className={styles["filled-input"]}
+            className={variant === "outlined" ? styles["outlined-input"] : styles["filled-input"]}
             InputLabelProps={{
               shrink: true,
             }}

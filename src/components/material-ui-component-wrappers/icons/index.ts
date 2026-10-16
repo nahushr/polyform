@@ -1,4 +1,5 @@
 import AddPhotoAlternateModule from "@mui/icons-material/AddPhotoAlternate";
+import AutoAwesomeModule from "@mui/icons-material/AutoAwesome";
 import ArrowDropDownModule from "@mui/icons-material/ArrowDropDown";
 import CancelOutlinedModule from "@mui/icons-material/CancelOutlined";
 import CloudUploadModule from "@mui/icons-material/CloudUpload";
@@ -13,6 +14,7 @@ import VisibilityOffModule from "@mui/icons-material/VisibilityOff";
 import { resolveIcon } from "./resolveIcon";
 
 export const AddPhotoAlternate = resolveIcon(AddPhotoAlternateModule);
+export const AutoAwesome = resolveIcon(AutoAwesomeModule);
 export const ArrowDropDown = resolveIcon(ArrowDropDownModule);
 export const CancelOutlined = resolveIcon(CancelOutlinedModule);
 export const CloudUpload = resolveIcon(CloudUploadModule);

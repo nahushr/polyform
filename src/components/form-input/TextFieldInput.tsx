@@ -149,6 +149,8 @@ const TextFieldInput = forwardRef<HTMLDivElement, TextFieldInputProps>(
 
     // Use "text" type when formatting numbers (number inputs don't support formatting)
     const inputType = shouldFormatNumber ? "text" : type;
+    const inputStyleClass =
+      variant === "outlined" ? styles["outlined-input"] : styles["filled-input"];
 
     return (
       <AppTextField
@@ -156,7 +158,7 @@ const TextFieldInput = forwardRef<HTMLDivElement, TextFieldInputProps>(
         variant={variant}
         margin={margin}
         fullWidth={fullWidth}
-        className={`${styles["filled-input"]} ${className || ""}`}
+        className={`${inputStyleClass} ${className || ""}`}
         type={inputType}
         value={shouldFormatNumber ? formattedValue : value}
         onChange={handleChange}

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 
 import { AppButton } from "../material-ui-component-wrappers";
+import { AutoAwesome } from "../material-ui-component-wrappers/icons";
 import { fillRegisteredPolyForms } from "./testFillRegistry";
 import styles from "./PolyFormTestFillButton.module.scss";
 
@@ -45,6 +46,7 @@ const PolyFormTestFillButton = ({
         variant="outlined"
         disabled={filling}
         aria-busy={filling}
+        startIcon={<AutoAwesome />}
         className={[styles.button, className].filter(Boolean).join(" ")}
         onClick={() => void handleFill()}
       >

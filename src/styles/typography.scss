@@ -1,0 +1,27 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --polyform-font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --polyform-font-mono: "JetBrains Mono", "Roboto Mono", ui-monospace, monospace;
+}
+
+html,
+body,
+body button,
+body input,
+body textarea,
+body select,
+body :global(.MuiTypography-root),
+body :global(.MuiButtonBase-root),
+body :global(.MuiInputBase-root),
+body :global(.MuiFormLabel-root) {
+  font-family: var(--polyform-font-sans) !important;
+}
+
+code,
+pre,
+:global(.font-mono),
+[data-font-family="mono"] {
+  font-family: var(--polyform-font-mono) !important;
+  font-variant-numeric: tabular-nums;
+}

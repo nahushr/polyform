@@ -1,0 +1,175 @@
+.grid {
+  display: grid;
+  align-items: start;
+  gap: 0.875rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.grid1 { grid-template-columns: minmax(0, 1fr); }
+.grid2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.card:global(.MuiPaper-root) {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.875rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 5%);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 2rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.cardHeading { min-width: 0; }
+
+.cardTitle {
+  color: #0f172a;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.cardSubtitle {
+  margin-top: 0.125rem;
+  color: #64748b;
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.badge {
+  flex: 0 0 auto;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid #a5f3fc;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #0e7490;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.cardBody { min-width: 0; }
+
+.option:global(.MuiFormControlLabel-root) {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0.3rem 0.375rem;
+  border-radius: 0.5rem;
+  transition: background-color 140ms ease;
+
+  &:hover { background: #f0fdfa; }
+
+  :global(.MuiCheckbox-root) {
+    margin-right: 0.25rem;
+    padding: 0.25rem;
+    color: #64748b;
+  }
+
+  :global(.MuiCheckbox-root.Mui-checked) { color: #0e7490; }
+}
+
+.optionCopy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding-top: 0.125rem;
+}
+
+.optionTitle {
+  color: #0f172a;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.optionDescription {
+  margin-top: 0.125rem;
+  color: #64748b;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0 0.75rem;
+}
+
+.actionButton:global(.MuiButton-root) {
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.65rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.actionButtonPrimary:global(.MuiButton-root) {
+  background: #06b6d4;
+  color: #083344;
+  box-shadow: 0 1px 2px rgb(8 51 68 / 12%);
+
+  &:hover { background: #22d3ee; }
+}
+
+.actionButtonSecondary:global(.MuiButton-root) {
+  border: 1px solid #06b6d4;
+  background: #ecfeff;
+  color: #0e7490;
+  box-shadow: none;
+
+  &:hover {
+    border-color: #0891b2;
+    background: #cffafe;
+    color: #083344;
+  }
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 0.5rem 1.5rem 1rem;
+  box-sizing: border-box;
+}
+
+.gridFrame {
+  width: 100%;
+  min-width: 0;
+  min-height: 19rem;
+}
+
+@media (max-width: 1100px) {
+  .grid4, .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .layout { padding-right: 1rem; padding-left: 1rem; }
+  .grid2, .grid3, .grid4 { grid-template-columns: minmax(0, 1fr); }
+  .actionRow { justify-content: stretch; }
+  .actionRow > * { flex: 1 1 auto; }
+}

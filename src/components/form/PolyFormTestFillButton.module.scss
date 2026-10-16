@@ -1,20 +1,37 @@
 .root {
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.25rem;
+  align-items: center;
   min-width: 0;
 }
 
 .button {
-  min-height: 2.75rem;
-  border-radius: 0.65rem;
+  min-height: 2.75rem !important;
+  padding: 0.5rem 1rem !important;
+  border: 1px solid #06b6d4 !important;
+  border-radius: 0.65rem !important;
+  background: #ecfeff !important;
+  box-shadow: none !important;
+  color: #0e7490 !important;
+  font-size: 0.875rem !important;
   font-weight: 600;
   text-transform: none;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: #0891b2 !important;
+    background: #cffafe !important;
+    color: #083344 !important;
+  }
 }
 
 .status {
-  color: #526079;
-  font-size: 0.75rem;
-  line-height: 1.35;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

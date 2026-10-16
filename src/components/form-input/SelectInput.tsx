@@ -49,6 +49,8 @@ const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
     },
     ref,
   ) => {
+    const inputStyleClass =
+      variant === "outlined" ? styles["outlined-input"] : styles["filled-input"];
     return (
       <AppTextField
         ref={ref}
@@ -56,7 +58,7 @@ const SelectInput = forwardRef<HTMLDivElement, SelectInputProps>(
         variant={variant}
         margin={margin}
         fullWidth={fullWidth}
-        className={`${styles["filled-input"]} ${className ?? ""}`}
+        className={`${inputStyleClass} ${className ?? ""}`}
         InputLabelProps={{
           shrink: true,
           ...InputLabelProps,

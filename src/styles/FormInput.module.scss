@@ -49,8 +49,8 @@
       &.Mui-focused {
         background-color: var(--app-surface, #ffffff) !important;
         border: 1px solid;
-        border-color: #1976d2;
-        box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.15);
+        border-color: #0e7490;
+        box-shadow: 0 0 0 3px rgb(6 182 212 / 18%);
       }
 
       &.Mui-error {
@@ -148,13 +148,91 @@
       color: #64748b;
 
       &.Mui-focused {
-        color: #1976d2;
+        color: #0e7490;
       }
     }
 
     .MuiFormLabel-asterisk {
       color: #d32f2f !important;
       font-weight: 700;
+    }
+  }
+}
+
+// Shared outlined variant used by filter builders, saved views, and app forms.
+.outlined-input {
+  :global {
+    .MuiFormControl-root {
+      margin: 0 !important;
+    }
+
+    .MuiOutlinedInput-root {
+      min-height: 48px;
+      border-radius: 10px;
+      background: #f8fafc;
+      color: #0f172a;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: background-color 140ms ease, box-shadow 140ms ease;
+
+      &:hover {
+        background: #fff;
+
+        .MuiOutlinedInput-notchedOutline {
+          border-color: #94a3b8;
+        }
+      }
+
+      &.Mui-focused {
+        background: #fff;
+        box-shadow: 0 0 0 3px rgb(6 182 212 / 18%);
+
+        .MuiOutlinedInput-notchedOutline {
+          border-width: 1px;
+          border-color: #0e7490;
+        }
+      }
+
+      .MuiOutlinedInput-notchedOutline {
+        border-color: #cbd5e1;
+      }
+    }
+
+    .MuiOutlinedInput-input {
+      padding: 12px 14px;
+      color: #0f172a;
+      font-size: 0.875rem;
+
+      &::placeholder {
+        color: #94a3b8;
+        opacity: 1;
+      }
+
+      &.MuiInputBase-inputMultiline {
+        padding: 12px 14px;
+        line-height: 1.5;
+      }
+    }
+
+    .MuiInputLabel-root {
+      color: #475569;
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      &.Mui-focused {
+        color: #0e7490;
+      }
+    }
+
+    .MuiFormLabel-asterisk {
+      color: #e11d48;
+      font-weight: 700;
+    }
+
+    .MuiAutocomplete-inputRoot.MuiOutlinedInput-root {
+      min-height: 48px;
+      padding-top: 0;
+      padding-bottom: 0;
     }
   }
 }
@@ -167,17 +245,20 @@
 .select-menu-item {
   border-radius: 4px;
   margin: 4px 8px;
-  color: #0f172a;
+  color: #334155;
+  font-size: 0.875rem;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: #f0fdfa;
+    color: #0e7490;
   }
 
   &.Mui-selected {
-    background-color: rgba(25, 118, 210, 0.08);
+    background-color: #ecfeff;
+    color: #0e7490;
 
     &:hover {
-      background-color: rgba(25, 118, 210, 0.12);
+      background-color: #cffafe;
     }
   }
 }

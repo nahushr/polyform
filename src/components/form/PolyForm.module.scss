@@ -1,3 +1,5 @@
+@import "../../styles/typography.scss";
+
 .field-grid-item {
   min-width: 0;
 }
@@ -28,13 +30,13 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.875rem;
   width: 100%;
 }
 
 .form-card {
   min-width: 0;
-  padding: 1.5rem;
+  padding: 0.75rem;
 }
 
 .card-header {
@@ -63,12 +65,12 @@
 }
 
 .card-divider:global(.MuiDivider-root) {
-  margin-top: 0.75rem;
-  margin-bottom: 1.25rem;
+  margin-top: 0.625rem;
+  margin-bottom: 0.875rem;
 }
 
 .section + .section {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .field-with-end-content {
