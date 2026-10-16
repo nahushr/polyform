@@ -8,12 +8,6 @@ export type { KeyValueEntry, KeyValueInputProps } from "./components/form-input/
 export type { RatingInputProps } from "./components/form-input/RatingInput";
 export type { SliderInputProps, SliderMark } from "./components/form-input/SliderInput";
 export type { TimePickerInputProps } from "./components/form-input/TimePickerInput";
-export { PolyFormModal, PolyFormModalButton } from "./components/modal/PolyFormModal";
-export type {
-  PolyFormModalButtonProps,
-  PolyFormModalClassNames,
-  PolyFormModalProps,
-} from "./components/modal/PolyFormModal";
 export {
   PolyFormActionRow,
   PolyFormActionButton,

@@ -21,6 +21,7 @@ const externalPackages = [
   "libphonenumber-js",
   "react-imask",
   "react-toastify",
+  "@simplishelf/opscards",
 ];
 
 export default defineConfig({

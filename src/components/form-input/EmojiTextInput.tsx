@@ -91,6 +91,11 @@ const EmojiTextInput = ({
     input.setSelectionRange(selectionRef.current.start, selectionRef.current.end);
   };
 
+  const closePicker = (): void => {
+    setPickerOpen(false);
+    window.setTimeout(restoreInputFocus, 0);
+  };
+
   return (
     <AppBox className={styles.root}>
       <TextFieldInput
@@ -130,19 +135,18 @@ const EmojiTextInput = ({
 
       <AppDialog
         open={pickerOpen}
-        onClose={() => setPickerOpen(false)}
+        onClose={closePicker}
         maxWidth="sm"
         fullWidth
         className={styles.dialog}
         aria-labelledby={dialogTitleId}
-        TransitionProps={{ onExited: restoreInputFocus }}
       >
         <AppDialogTitle id={dialogTitleId} className={styles.dialogTitle}>
           <span>Choose an emoji</span>
           <AppIconButton
             type="button"
             aria-label="Close emoji picker"
-            onClick={() => setPickerOpen(false)}
+            onClick={closePicker}
             className={styles.closeButton}
           >
             <CancelOutlined fontSize="small" />

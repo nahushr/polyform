@@ -6,10 +6,6 @@ export {
   Checkbox as AppCheckbox,
   Chip as AppChip,
   Divider as AppDivider,
-  Dialog as AppDialog,
-  DialogActions as AppDialogActions,
-  DialogContent as AppDialogContent,
-  DialogTitle as AppDialogTitle,
   FormControl as AppFormControl,
   FormControlLabel as AppFormControlLabel,
   FormGroup as AppFormGroup,
@@ -33,6 +29,14 @@ export {
   Tooltip as AppTooltip,
   Typography as AppTypography,
 } from "@mui/material";
+
+export {
+  OpsModal as AppDialog,
+  OpsModalActions as AppDialogActions,
+  OpsModalContent as AppDialogContent,
+  OpsModalContentText as AppDialogContentText,
+  OpsModalHeader as AppDialogTitle,
+} from "@simplishelf/opscards";
 
 export type { AutocompleteProps, AutocompleteRenderInputParams } from "@mui/material/Autocomplete";
 export type { RadioGroupProps } from "@mui/material/RadioGroup";

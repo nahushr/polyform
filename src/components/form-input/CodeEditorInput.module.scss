@@ -36,7 +36,7 @@
 
   :global(.cm-scroller) {
     min-height: 15rem;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    font-family: var(--ops-font-mono, ui-monospace, monospace);
   }
 
   :global(.cm-gutters) {
