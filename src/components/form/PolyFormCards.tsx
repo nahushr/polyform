@@ -178,14 +178,22 @@ export const PolyFormLayout = ({
 export interface PolyFormGridFrameProps {
   children: ReactNode;
   className?: string;
+  flushTop?: boolean;
 }
 
 /** Consistent sizing wrapper for data grids embedded in a PolyForm card. */
 export const PolyFormGridFrame = ({
   children,
   className,
+  flushTop = false,
 }: Readonly<PolyFormGridFrameProps>): JSX.Element => (
-  <div className={[styles.gridFrame, className].filter(Boolean).join(" ")}>
+  <div
+    className={[
+      styles.gridFrame,
+      flushTop ? styles.gridFrameFlushTop : "",
+      className,
+    ].filter(Boolean).join(" ")}
+  >
     {children}
   </div>
 );

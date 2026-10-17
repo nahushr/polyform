@@ -48,18 +48,23 @@
 
 .cardHeading { min-width: 0; }
 
-.cardTitle {
-  color: #0f172a;
-  font-size: 0.875rem;
+.cardTitle:global(.MuiTypography-root) {
+  color: #0e7490;
+  font-family: var(--polyform-font-sans, var(--ops-font-sans, ui-sans-serif, system-ui, sans-serif));
+  font-size: 1rem;
   font-weight: 700;
-  line-height: 1.35;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 
-.cardSubtitle {
+.cardSubtitle:global(.MuiTypography-root) {
   margin-top: 0.125rem;
-  color: #64748b;
-  font-size: 0.75rem;
-  line-height: 1.45;
+  color: #527481;
+  font-family: var(--polyform-font-sans, var(--ops-font-sans, ui-sans-serif, system-ui, sans-serif));
+  font-size: 0.8125rem;
+  font-weight: 450;
+  letter-spacing: 0.005em;
+  line-height: 1.5;
 }
 
 .badge {
@@ -175,6 +180,10 @@
   width: 100%;
   min-width: 0;
   min-height: 19rem;
+}
+
+.gridFrameFlushTop {
+  margin-top: -0.5rem;
 }
 
 @media (max-width: 1100px) {
