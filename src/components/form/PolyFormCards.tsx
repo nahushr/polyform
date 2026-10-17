@@ -14,6 +14,7 @@ import styles from "./PolyFormCards.module.scss";
 export interface PolyFormCardGridProps {
   children: ReactNode;
   columns?: 1 | 2 | 3 | 4;
+  layout?: "grid" | "masonry";
   className?: string;
   label?: string;
 }
@@ -21,11 +22,17 @@ export interface PolyFormCardGridProps {
 export const PolyFormCardGrid = ({
   children,
   columns = 3,
+  layout = "grid",
   className,
   label,
 }: Readonly<PolyFormCardGridProps>): JSX.Element => (
   <AppBox
-    className={[styles.grid, styles[`grid${columns}`], className]
+    className={[
+      styles.grid,
+      styles[`grid${columns}`],
+      layout === "masonry" ? styles.masonry : undefined,
+      className,
+    ]
       .filter(Boolean)
       .join(" ")}
     aria-label={label}
