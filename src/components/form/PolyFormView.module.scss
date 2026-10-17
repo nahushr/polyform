@@ -24,23 +24,27 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.25rem;
 }
 
 .summary-title {
   margin: 0;
-  color: #172747;
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
-  font-weight: 720;
-  letter-spacing: -0.025em;
-  line-height: 1.25;
+  color: #0e7490;
+  font-family: var(--polyform-font-sans, var(--ops-font-sans, ui-sans-serif, system-ui, sans-serif));
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 
 .summary-subtitle {
   margin: 0;
-  color: #66748c;
-  font-size: 0.94rem;
-  line-height: 1.55;
+  color: #527481;
+  font-family: var(--polyform-font-sans, var(--ops-font-sans, ui-sans-serif, system-ui, sans-serif));
+  font-size: 0.8125rem;
+  font-weight: 450;
+  letter-spacing: 0.005em;
+  line-height: 1.5;
 }
 
 .summary-card-divider {
